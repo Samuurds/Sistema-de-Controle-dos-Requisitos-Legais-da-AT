@@ -26,6 +26,7 @@
             color: white;
             padding: 20px;
             box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            position: relative;
         }
         .header-content {
             max-width: 1400px;
@@ -61,8 +62,12 @@
             font-weight: 500;
             transition: all 0.3s;
         }
+        .btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
         .btn-primary { background: var(--cemig-azul); color: white; }
-        .btn-primary:hover { background: var(--cemig-azul-escuro); }
+        .btn-primary:hover:not(:disabled) { background: var(--cemig-azul-escuro); }
         .btn-success { background: var(--verde); color: white; }
         .btn-danger { background: var(--vermelho); color: white; }
         .btn-secondary { background: var(--cemig-cinza); color: white; }
@@ -285,6 +290,23 @@
             color: #155724;
             border: 1px solid #c3e6cb;
         }
+        .github-status {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            padding: 5px 10px;
+            border-radius: 15px;
+            font-size: 11px;
+            font-weight: bold;
+        }
+        .github-active {
+            background: #d4edda;
+            color: #155724;
+        }
+        .github-offline {
+            background: #f8d7da;
+            color: #721c24;
+        }
         @keyframes slideIn {
             from { transform: translateX(400px); opacity: 0; }
             to { transform: translateX(0); opacity: 1; }
@@ -292,6 +314,14 @@
         @keyframes slideOut {
             from { transform: translateX(0); opacity: 1; }
             to { transform: translateX(400px); opacity: 0; }
+        }
+        @keyframes spin {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+        .spinning {
+            display: inline-block;
+            animation: spin 1s linear infinite;
         }
     </style>
 </head>
@@ -371,9 +401,13 @@
                     <h1>Sistema de Controle de Documentos</h1>
                 </div>
                 <div class="user-info">
+                    <button id="syncButton" class="btn btn-primary hidden" onclick="manualSync()">
+                        <span id="syncIcon">🔄</span> Sincronizar
+                    </button>
                     <span id="userName">Visitante</span>
                     <button class="btn btn-secondary" onclick="logout()">Sair</button>
                 </div>
+                <div id="githubStatus" class="github-status"></div>
             </div>
         </div>
 
@@ -514,6 +548,15 @@
     </div>
 
     <script>
+        // ==================== CONFIGURAÇÃO DO GITHUB ====================
+        const GITHUB_CONFIG = {
+            owner: 'Samuurds',
+            repo: 'Sistema-de-Controle-dos-Requisitos-Legais-da-AT',
+            branch: 'main',
+            filePath: 'index.html',
+            token: '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' // ⚠️ SUBSTITUIR pelo seu token
+        };
+
         // ==================== DADOS E ESTADO ====================
         let currentUser = null;
         let isVisitor = false;
@@ -521,17 +564,242 @@
         let users = [];
         let pendingUsers = [];
         let chartInstance = null;
+        let syncInterval = null;
+
+        // ==================== VERIFICAR CONFIGURAÇÃO DO GITHUB ====================
+        function isGitHubConfigured() {
+            return GITHUB_CONFIG.token && 
+                   GITHUB_CONFIG.token.length > 20 && 
+                   !GITHUB_CONFIG.token.includes('xxx');
+        }
 
         // ==================== INICIALIZAÇÃO ====================
-        function init() {
+        async function init() {
             loadData();
             checkFirstUser();
+            
+            // Tentar carregar do GitHub
+            if (isGitHubConfigured()) {
+                await loadFromGitHub();
+                startAutoSync();
+            }
+            
+            updateGitHubStatus();
         }
 
         function checkFirstUser() {
             if (users.length === 0) {
                 document.getElementById('firstUserAlert').classList.remove('hidden');
             }
+        }
+
+        function updateGitHubStatus() {
+            const statusDiv = document.getElementById('githubStatus');
+            if (!statusDiv) return;
+            
+            if (isGitHubConfigured()) {
+                statusDiv.textContent = '🟢 GitHub Ativo';
+                statusDiv.className = 'github-status github-active';
+            } else {
+                statusDiv.textContent = '🔴 GitHub Offline';
+                statusDiv.className = 'github-status github-offline';
+            }
+        }
+
+        // ==================== SINCRONIZAÇÃO COM GITHUB ====================
+        async function loadFromGitHub() {
+            if (!isGitHubConfigured()) {
+                console.log('⚠️ GitHub não configurado. Usando localStorage.');
+                return false;
+            }
+
+            try {
+                console.log('📥 Carregando dados do GitHub...');
+                
+                const url = `https://api.github.com/repos/$${GITHUB_CONFIG.owner}/$${GITHUB_CONFIG.repo}/contents/$${GITHUB_CONFIG.filePath}?ref=$${GITHUB_CONFIG.branch}`;
+                
+                const response = await fetch(url, {
+                    headers: {
+                        'Authorization': `Bearer ${GITHUB_CONFIG.token}`,
+                        'Accept': 'application/vnd.github.v3+json'
+                    }
+                });
+                
+                if (response.ok) {
+                    const fileData = await response.json();
+                    const content = decodeURIComponent(escape(atob(fileData.content)));
+                    const data = JSON.parse(content);
+                    
+                    if (data.documents) {
+                        documents = data.documents;
+                        localStorage.setItem('cemig_documents', JSON.stringify(documents));
+                    }
+                    
+                    if (data.users) {
+                        data.users.forEach(remoteUser => {
+                            const localUser = users.find(u => u.id === remoteUser.id);
+                            if (localUser) {
+                                Object.assign(localUser, remoteUser, { password: localUser.password });
+                            } else {
+                                users.push({
+                                    ...remoteUser,
+                                    password: 'trocar123'
+                                });
+                            }
+                        });
+                        localStorage.setItem('cemig_users', JSON.stringify(users));
+                    }
+                    
+                    if (data.pendingUsers) {
+                        pendingUsers = data.pendingUsers.map(pu => {
+                            const localPending = pendingUsers.find(u => u.id === pu.id);
+                            return localPending || { ...pu, password: 'trocar123' };
+                        });
+                        localStorage.setItem('cemig_pending', JSON.stringify(pendingUsers));
+                    }
+                    
+                    console.log('✅ Dados carregados do GitHub!');
+                    
+                    if (!document.getElementById('mainScreen').classList.contains('hidden')) {
+                        updateDashboard();
+                        loadDocuments();
+                        createChart();
+                        if (currentUser && currentUser.isAdmin) {
+                            loadPendingUsers();
+                        }
+                    }
+                    
+                    return true;
+                } else if (response.status === 404) {
+                    console.log('ℹ️ Arquivo não existe no GitHub. Será criado na próxima sincronização.');
+                    return false;
+                } else {
+                    const errorData = await response.json();
+                    throw new Error(errorData.message || 'Erro ao carregar do GitHub');
+                }
+                
+            } catch (error) {
+                console.error('❌ Erro ao carregar do GitHub:', error);
+                showNotification('Erro ao carregar do GitHub: ' + error.message, 'error');
+                return false;
+            }
+        }
+
+        async function syncWithGitHub() {
+            if (!isGitHubConfigured()) {
+                console.log('⚠️ GitHub não configurado. Salvando apenas localmente.');
+                return false;
+            }
+
+            try {
+                console.log('🔄 Sincronizando com GitHub...');
+                
+                const dataToSync = {
+                    documents: documents,
+                    users: users.map(u => ({
+                        id: u.id,
+                        name: u.name,
+                        username: u.username,
+                        isAdmin: u.isAdmin,
+                        createdAt: u.createdAt
+                    })),
+                    pendingUsers: pendingUsers.map(u => ({
+                        id: u.id,
+                        name: u.name,
+                        username: u.username,
+                        isAdmin: u.isAdmin,
+                        createdAt: u.createdAt
+                    })),
+                    lastSync: new Date().toISOString(),
+                    syncedBy: currentUser ? currentUser.username : 'system'
+                };
+                
+                const getUrl = `https://api.github.com/repos/$${GITHUB_CONFIG.owner}/$${GITHUB_CONFIG.repo}/contents/$${GITHUB_CONFIG.filePath}?ref=$${GITHUB_CONFIG.branch}`;
+                
+                let fileSha = null;
+                const getResponse = await fetch(getUrl, {
+                    headers: {
+                        'Authorization': `Bearer ${GITHUB_CONFIG.token}`,
+                        'Accept': 'application/vnd.github.v3+json'
+                    }
+                });
+                
+                if (getResponse.ok) {
+                    const fileData = await getResponse.json();
+                    fileSha = fileData.sha;
+                    console.log('✓ Arquivo existente encontrado');
+                } else {
+                    console.log('ℹ️ Arquivo não existe, será criado');
+                }
+                
+                const content = btoa(unescape(encodeURIComponent(JSON.stringify(dataToSync, null, 2))));
+                const updateUrl = `https://api.github.com/repos/$${GITHUB_CONFIG.owner}/$${GITHUB_CONFIG.repo}/contents/${GITHUB_CONFIG.filePath}`;
+                
+                const updateResponse = await fetch(updateUrl, {
+                    method: 'PUT',
+                    headers: {
+                        'Authorization': `Bearer ${GITHUB_CONFIG.token}`,
+                        'Accept': 'application/vnd.github.v3+json',
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        message: `📝 Atualização automática - ${new Date().toLocaleString('pt-BR')}`,
+                        content: content,
+                        sha: fileSha,
+                        branch: GITHUB_CONFIG.branch
+                    })
+                });
+                
+                if (updateResponse.ok) {
+                    console.log('✅ Dados sincronizados com GitHub!');
+                    return true;
+                } else {
+                    const errorData = await updateResponse.json();
+                    throw new Error(errorData.message || 'Erro ao sincronizar');
+                }
+                
+            } catch (error) {
+                console.error('❌ Erro ao sincronizar com GitHub:', error);
+                showNotification('Erro ao sincronizar: ' + error.message, 'error');
+                return false;
+            }
+        }
+
+        function startAutoSync() {
+            if (!isGitHubConfigured()) return;
+            
+            syncInterval = setInterval(async () => {
+                console.log('🔄 Sincronização automática iniciada...');
+                await loadFromGitHub();
+            }, 5 * 60 * 1000); // 5 minutos
+            
+            console.log('✅ Sincronização automática ativada (a cada 5 minutos)');
+        }
+
+        function stopAutoSync() {
+            if (syncInterval) {
+                clearInterval(syncInterval);
+                syncInterval = null;
+                console.log('⏸️ Sincronização automática desativada');
+            }
+        }
+
+        async function manualSync() {
+            const btn = document.getElementById('syncButton');
+            const icon = document.getElementById('syncIcon');
+            
+            btn.disabled = true;
+            icon.classList.add('spinning');
+            icon.textContent = '⏳';
+            
+            await syncWithGitHub();
+            await loadFromGitHub();
+            
+            icon.classList.remove('spinning');
+            icon.textContent = '🔄';
+            btn.disabled = false;
+            
+            showNotification('Sincronização concluída!', 'success');
         }
 
         // ==================== PERSISTÊNCIA DE DADOS ====================
@@ -548,10 +816,14 @@
             }
         }
 
-        function saveData() {
+        async function saveData() {
             localStorage.setItem('cemig_documents', JSON.stringify(documents));
             localStorage.setItem('cemig_users', JSON.stringify(users));
             localStorage.setItem('cemig_pending', JSON.stringify(pendingUsers));
+            
+            if (isGitHubConfigured() && currentUser) {
+                await syncWithGitHub();
+            }
         }
 
         // ==================== AUTENTICAÇÃO ====================
@@ -618,14 +890,12 @@
                 createdAt: new Date().toISOString()
             };
             
-            // Primeiro usuário vira admin automaticamente
             if (users.length === 0) {
                 newUser.isAdmin = true;
                 users.push(newUser);
                 saveData();
                 showNotification('Cadastro realizado! Você é o administrador do sistema.', 'success');
                 
-                // Fazer login automático
                 currentUser = newUser;
                 isVisitor = false;
                 setTimeout(() => showMainScreen(), 1500);
@@ -635,7 +905,6 @@
                 showNotification('Solicitação enviada! Aguarde aprovação do administrador.', 'success');
             }
             
-            // Limpar formulário
             document.getElementById('regName').value = '';
             document.getElementById('regUser').value = '';
             document.getElementById('regPass').value = '';
@@ -650,6 +919,7 @@
         }
 
         function logout() {
+            stopAutoSync();
             currentUser = null;
             isVisitor = false;
             document.getElementById('mainScreen').classList.add('hidden');
@@ -657,7 +927,7 @@
             showNotification('Logout realizado com sucesso!', 'success');
         }
 
-        function showMainScreen() {
+        async function showMainScreen() {
             document.getElementById('loginScreen').classList.add('hidden');
             document.getElementById('mainScreen').classList.remove('hidden');
             
@@ -673,11 +943,20 @@
                 
                 document.getElementById('addDocButton').classList.remove('hidden');
                 document.getElementById('actionsHeader').classList.remove('hidden');
+                
+                if (isGitHubConfigured()) {
+                    document.getElementById('syncButton').classList.remove('hidden');
+                }
             } else {
                 document.getElementById('userName').textContent = 'Visitante (Somente Leitura)';
                 document.getElementById('adminPanel').classList.add('hidden');
                 document.getElementById('addDocButton').classList.add('hidden');
                 document.getElementById('actionsHeader').classList.add('hidden');
+                document.getElementById('syncButton').classList.add('hidden');
+            }
+            
+            if (isGitHubConfigured() && currentUser) {
+                await loadFromGitHub();
             }
             
             updateDashboard();
@@ -744,9 +1023,9 @@
                         <small style="color: #666;">@${user.username}</small>
                     </div>
                     <div class="action-buttons">
-                        $${!user.isAdmin ? `<button class="btn btn-primary btn-small" onclick="toggleAdmin($${user.id}, true)">Tornar Admin</button>` : ''}
-                        $${user.isAdmin && user.id !== currentUser.id ? `<button class="btn btn-secondary btn-small" onclick="toggleAdmin($${user.id}, false)">Remover Admin</button>` : ''}
-                        $${user.id !== currentUser.id ? `<button class="btn btn-danger btn-small" onclick="deleteUser($${user.id})">Excluir</button>` : ''}
+                        ${!user.isAdmin ? `<button class="btn btn-primary btn-small" onclick="toggleAdmin(${user.id}, true)">Tornar Admin</button>` : ''}
+                        ${user.isAdmin && user.id !== currentUser.id ? `<button class="btn btn-secondary btn-small" onclick="toggleAdmin(${user.id}, false)">Remover Admin</button>` : ''}
+                        ${user.id !== currentUser.id ? `<button class="btn btn-danger btn-small" onclick="deleteUser(${user.id})">Excluir</button>` : ''}
                     </div>
                 </div>
             `).join('');
@@ -767,7 +1046,7 @@
         function rejectUser(userId) {
             const userIndex = pendingUsers.findIndex(u => u.id === userId);
             if (userIndex !== -1) {
-                if (confirm('Desejaif (confirm('Deseja realmente rejeitar esta solicitação?')) {
+                if (confirm('Deseja realmente rejeitar esta solicitação?')) {
                     const user = pendingUsers[userIndex];
                     pendingUsers.splice(userIndex, 1);
                     saveData();
@@ -1152,8 +1431,15 @@
         }
 
         // ==================== INICIALIZAÇÃO ====================
-        window.onload = function() {
-            init();
+        window.onload = async function() {
+            await init();
+            console.log('🚀 Sistema de Controle de Documentos CEMIG');
+            console.log('📊 GitHub Status:', isGitHubConfigured() ? '✅ Configurado' : '❌ Não configurado');
+            if (isGitHubConfigured()) {
+                console.log('📁 Repositório:', `${GITHUB_CONFIG.owner}/${GITHUB_CONFIG.repo}`);
+                console.log('🌿 Branch:', GITHUB_CONFIG.branch);
+                console.log('📄 Arquivo:', GITHUB_CONFIG.filePath);
+            }
         }
     </script>
 </body>
