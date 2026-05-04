@@ -6,12 +6,7 @@
     <title>Sistema de Controle de Documentos - CEMIG</title>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
+        * { margin: 0; padding: 0; box-sizing: border-box; }
         :root {
             --cemig-azul: #0067B1;
             --cemig-azul-escuro: #004A8F;
@@ -20,53 +15,43 @@
             --amarelo: #ffc107;
             --vermelho: #dc3545;
         }
-
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             background: #f4f6f9;
             color: #333;
             line-height: 1.6;
         }
-
         .header {
             background: linear-gradient(135deg, var(--cemig-azul) 0%, var(--cemig-azul-escuro) 100%);
             color: white;
             padding: 20px;
             box-shadow: 0 2px 10px rgba(0,0,0,0.1);
         }
-
         .header-content {
             max-width: 1400px;
             margin: 0 auto;
             display: flex;
             justify-content: space-between;
             align-items: center;
+            flex-wrap: wrap;
         }
-
         .logo-container {
             display: flex;
             align-items: center;
             gap: 15px;
         }
-
         .logo {
             height: 60px;
             background: white;
             padding: 10px;
             border-radius: 8px;
         }
-
-        .header h1 {
-            font-size: 24px;
-            font-weight: 600;
-        }
-
+        .header h1 { font-size: 24px; font-weight: 600; }
         .user-info {
             display: flex;
             align-items: center;
             gap: 15px;
         }
-
         .btn {
             padding: 10px 20px;
             border: none;
@@ -76,37 +61,17 @@
             font-weight: 500;
             transition: all 0.3s;
         }
-
-        .btn-primary {
-            background: var(--cemig-azul);
-            color: white;
-        }
-
-        .btn-primary:hover {
-            background: var(--cemig-azul-escuro);
-        }
-
-        .btn-success {
-            background: var(--verde);
-            color: white;
-        }
-
-        .btn-danger {
-            background: var(--vermelho);
-            color: white;
-        }
-
-        .btn-secondary {
-            background: var(--cemig-cinza);
-            color: white;
-        }
-
+        .btn-primary { background: var(--cemig-azul); color: white; }
+        .btn-primary:hover { background: var(--cemig-azul-escuro); }
+        .btn-success { background: var(--verde); color: white; }
+        .btn-danger { background: var(--vermelho); color: white; }
+        .btn-secondary { background: var(--cemig-cinza); color: white; }
+        .btn-small { padding: 5px 10px; font-size: 12px; border-radius: 4px; }
         .container {
             max-width: 1400px;
             margin: 30px auto;
             padding: 0 20px;
         }
-
         .login-container {
             max-width: 450px;
             margin: 100px auto;
@@ -115,27 +80,19 @@
             border-radius: 10px;
             box-shadow: 0 5px 20px rgba(0,0,0,0.1);
         }
-
         .login-container h2 {
             color: var(--cemig-azul);
             margin-bottom: 25px;
             text-align: center;
         }
-
-        .form-group {
-            margin-bottom: 20px;
-        }
-
+        .form-group { margin-bottom: 20px; }
         .form-group label {
             display: block;
             margin-bottom: 5px;
             font-weight: 500;
             color: #555;
         }
-
-        .form-group input,
-        .form-group select,
-        .form-group textarea {
+        .form-group input, .form-group select, .form-group textarea {
             width: 100%;
             padding: 12px;
             border: 1px solid #ddd;
@@ -143,49 +100,39 @@
             font-size: 14px;
             transition: border 0.3s;
         }
-
-        .form-group input:focus,
-        .form-group select:focus,
-        .form-group textarea:focus {
+        .form-group input:focus, .form-group select:focus, .form-group textarea:focus {
             outline: none;
             border-color: var(--cemig-azul);
         }
-
         .dashboard {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
             gap: 20px;
             margin-bottom: 30px;
         }
-
         .card {
             background: white;
             padding: 25px;
             border-radius: 10px;
             box-shadow: 0 2px 10px rgba(0,0,0,0.08);
         }
-
         .card-status {
             text-align: center;
             padding: 30px;
         }
-
         .card-status h3 {
             font-size: 16px;
             margin-bottom: 15px;
             color: #666;
         }
-
         .card-status .number {
             font-size: 48px;
             font-weight: bold;
             margin-bottom: 10px;
         }
-
         .status-valido .number { color: var(--verde); }
         .status-alerta .number { color: var(--amarelo); }
         .status-vencido .number { color: var(--vermelho); }
-
         .chart-container {
             background: white;
             padding: 25px;
@@ -193,38 +140,32 @@
             box-shadow: 0 2px 10px rgba(0,0,0,0.08);
             margin-bottom: 30px;
         }
-
         .chart-container h3 {
             color: var(--cemig-azul);
             margin-bottom: 20px;
         }
-
         table {
             width: 100%;
             background: white;
             border-radius: 10px;
             overflow: hidden;
             box-shadow: 0 2px 10px rgba(0,0,0,0.08);
+            border-collapse: collapse;
         }
-
         thead {
             background: var(--cemig-azul);
             color: white;
         }
-
         th, td {
             padding: 15px;
             text-align: left;
         }
-
         tbody tr {
             border-bottom: 1px solid #eee;
         }
-
         tbody tr:hover {
             background: #f8f9fa;
         }
-
         .status-badge {
             padding: 5px 12px;
             border-radius: 20px;
@@ -232,33 +173,10 @@
             font-weight: 600;
             display: inline-block;
         }
-
-        .badge-valido {
-            background: #d4edda;
-            color: #155724;
-        }
-
-        .badge-alerta {
-            background: #fff3cd;
-            color: #856404;
-        }
-
-        .badge-vencido {
-            background: #f8d7da;
-            color: #721c24;
-        }
-
-        .action-buttons {
-            display: flex;
-            gap: 5px;
-        }
-
-        .btn-small {
-            padding: 5px 10px;
-            font-size: 12px;
-            border-radius: 4px;
-        }
-
+        .badge-valido { background: #d4edda; color: #155724; }
+        .badge-alerta { background: #fff3cd; color: #856404; }
+        .badge-vencido { background: #f8d7da; color: #721c24; }
+        .action-buttons { display: flex; gap: 5px; }
         .modal {
             display: none;
             position: fixed;
@@ -270,7 +188,6 @@
             z-index: 1000;
             overflow-y: auto;
         }
-
         .modal-content {
             background: white;
             max-width: 600px;
@@ -279,7 +196,6 @@
             border-radius: 10px;
             position: relative;
         }
-
         .close {
             position: absolute;
             top: 15px;
@@ -288,18 +204,13 @@
             cursor: pointer;
             color: #999;
         }
-
-        .close:hover {
-            color: #333;
-        }
-
+        .close:hover { color: #333; }
         .tabs {
             display: flex;
             gap: 10px;
             margin-bottom: 20px;
             border-bottom: 2px solid #eee;
         }
-
         .tab {
             padding: 12px 24px;
             cursor: pointer;
@@ -309,32 +220,19 @@
             font-weight: 500;
             color: #666;
             transition: all 0.3s;
+            border-bottom: 3px solid transparent;
         }
-
         .tab.active {
             color: var(--cemig-azul);
             border-bottom: 3px solid var(--cemig-azul);
         }
-
-        .hidden {
-            display: none;
-        }
-
+        .hidden { display: none !important; }
         .obs-icon {
             cursor: pointer;
             font-size: 20px;
             color: var(--cemig-azul);
         }
-
-        .obs-icon:hover {
-            color: var(--cemig-azul-escuro);
-        }
-
-        .tooltip {
-            position: relative;
-            display: inline-block;
-        }
-
+        .obs-icon:hover { color: var(--cemig-azul-escuro); }
         .admin-panel {
             background: white;
             padding: 25px;
@@ -342,11 +240,7 @@
             box-shadow: 0 2px 10px rgba(0,0,0,0.08);
             margin-bottom: 30px;
         }
-
-        .user-list {
-            margin-top: 20px;
-        }
-
+        .user-list { margin-top: 20px; }
         .user-item {
             display: flex;
             justify-content: space-between;
@@ -356,7 +250,6 @@
             border-radius: 5px;
             margin-bottom: 10px;
         }
-
         .pending-badge {
             background: var(--amarelo);
             color: #333;
@@ -364,10 +257,41 @@
             border-radius: 12px;
             font-size: 11px;
             font-weight: 600;
+            margin-left: 10px;
         }
-
-        #outroTipoContainer {
-            display: none;
+        .admin-badge {
+            background: var(--cemig-azul);
+            color: white;
+            padding: 3px 10px;
+            border-radius: 12px;
+            font-size: 11px;
+            font-weight: 600;
+            margin-left: 10px;
+        }
+        #outroTipoContainer { display: none; }
+        .alert {
+            padding: 15px;
+            margin-bottom: 20px;
+            border-radius: 5px;
+            font-size: 14px;
+        }
+        .alert-info {
+            background: #d1ecf1;
+            color: #0c5460;
+            border: 1px solid #bee5eb;
+        }
+        .alert-success {
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+        @keyframes slideIn {
+            from { transform: translateX(400px); opacity: 0; }
+            to { transform: translateX(0); opacity: 1; }
+        }
+        @keyframes slideOut {
+            from { transform: translateX(0); opacity: 1; }
+            to { transform: translateX(400px); opacity: 0; }
         }
     </style>
 </head>
@@ -385,8 +309,12 @@
         
         <div class="login-container">
             <div class="tabs">
-                <button class="tab active" onclick="showTab('login')">Login</button>
-                <button class="tab" onclick="showTab('register')">Cadastrar</button>
+                <button class="tab active" onclick="showLoginTab('login')">Login</button>
+                <button class="tab" onclick="showLoginTab('register')">Cadastrar</button>
+            </div>
+
+            <div id="firstUserAlert" class="alert alert-info hidden">
+                <strong>ℹ️ Primeiro Acesso:</strong> O primeiro usuário cadastrado será automaticamente o administrador do sistema.
             </div>
 
             <!-- Formulário de Login -->
@@ -394,17 +322,17 @@
                 <h2>Acesse sua conta</h2>
                 <form onsubmit="handleLogin(event)">
                     <div class="form-group">
-                        <label>Usuário</label>
+                        <label>Usuário *</label>
                         <input type="text" id="loginUser" required>
                     </div>
                     <div class="form-group">
-                        <label>Senha</label>
+                        <label>Senha *</label>
                         <input type="password" id="loginPass" required>
                     </div>
                     <button type="submit" class="btn btn-primary" style="width: 100%;">Entrar</button>
                 </form>
                 <p style="text-align: center; margin-top: 15px; color: #666; font-size: 13px;">
-                    Visitante? <a href="#" onclick="acessarComoVisitante()" style="color: var(--cemig-azul);">Acessar sem login</a>
+                    Visitante? <a href="#" onclick="acessarComoVisitante(); return false;" style="color: var(--cemig-azul);">Acessar sem login</a>
                 </p>
             </div>
 
@@ -413,19 +341,19 @@
                 <h2>Solicitar Cadastro</h2>
                 <form onsubmit="handleRegister(event)">
                     <div class="form-group">
-                        <label>Nome Completo</label>
+                        <label>Nome Completo *</label>
                         <input type="text" id="regName" required>
                     </div>
                     <div class="form-group">
-                        <label>Usuário</label>
+                        <label>Usuário *</label>
                         <input type="text" id="regUser" required>
                     </div>
                     <div class="form-group">
-                        <label>Senha</label>
-                        <input type="password" id="regPass" required>
+                        <label>Senha *</label>
+                        <input type="password" id="regPass" required minlength="4">
                     </div>
                     <div class="form-group">
-                        <label>Confirmar Senha</label>
+                        <label>Confirmar Senha *</label>
                         <input type="password" id="regPassConfirm" required>
                     </div>
                     <button type="submit" class="btn btn-success" style="width: 100%;">Solicitar Cadastro</button>
@@ -581,7 +509,7 @@
         <div class="modal-content">
             <span class="close" onclick="closeModal('obsModal')">&times;</span>
             <h2>Observações</h2>
-            <p id="obsContent" style="padding: 20px; background: #f8f9fa; border-radius: 5px; margin-top: 15px;"></p>
+            <p id="obsContent" style="padding: 20px; background: #f8f9fa; border-radius: 5px; margin-top: 15px; white-space: pre-wrap;"></p>
         </div>
     </div>
 
@@ -592,26 +520,26 @@
         let documents = [];
         let users = [];
         let pendingUsers = [];
+        let chartInstance = null;
 
         // ==================== INICIALIZAÇÃO ====================
         function init() {
             loadData();
-            
-            // Se não houver usuários, o primeiro será admin
+            checkFirstUser();
+        }
+
+        function checkFirstUser() {
             if (users.length === 0) {
-                console.log('Nenhum usuário cadastrado. Primeiro usuário será admin.');
+                document.getElementById('firstUserAlert').classList.remove('hidden');
             }
         }
 
         // ==================== PERSISTÊNCIA DE DADOS ====================
-        // NOTA: Para integração com GitHub, substitua estas funções por chamadas à GitHub API
-        // Documentação: https://docs.github.com/en/rest/repos/contents
-        
         function loadData() {
             try {
-                documents = JSON.parse(localStorage.getItem('documents')) || [];
-                users = JSON.parse(localStorage.getItem('users')) || [];
-                pendingUsers = JSON.parse(localStorage.getItem('pendingUsers')) || [];
+                documents = JSON.parse(localStorage.getItem('cemig_documents')) || [];
+                users = JSON.parse(localStorage.getItem('cemig_users')) || [];
+                pendingUsers = JSON.parse(localStorage.getItem('cemig_pending')) || [];
             } catch (e) {
                 console.error('Erro ao carregar dados:', e);
                 documents = [];
@@ -621,85 +549,34 @@
         }
 
         function saveData() {
-            localStorage.setItem('documents', JSON.stringify(documents));
-            localStorage.setItem('users', JSON.stringify(users));
-            localStorage.setItem('pendingUsers', JSON.stringify(pendingUsers));
-            
-            // TODO: Implementar sincronização com GitHub
-            // syncWithGitHub();
+            localStorage.setItem('cemig_documents', JSON.stringify(documents));
+            localStorage.setItem('cemig_users', JSON.stringify(users));
+            localStorage.setItem('cemig_pending', JSON.stringify(pendingUsers));
         }
-
-        async function syncWithGitHub() {
-            const GITHUB_TOKEN = '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';
-            const REPO_OWNER = 'Samuurds';
-            const REPO_NAME = 'Sistema-de-Controle-dos-Requisitos-Legais-da-AT';
-            const FILE_PATH = 'index.html';
-            
-            const data = {
-                documents: documents,
-                users: users.map(u => ({...u, password: undefined})), // Não salvar senhas
-                lastUpdate: new Date().toISOString()
-            };
-            
-            try {
-                // Obter SHA do arquivo atual
-                const getResponse = await fetch(
-                    `https://api.github.com/repos/$${REPO_OWNER}/$${REPO_NAME}/contents/${FILE_PATH}`,
-                    {
-                        headers: {
-                            'Authorization': `token ${GITHUB_TOKEN}`,
-                            'Accept': 'application/vnd.github.v3+json'
-                        }
-                    }
-                );
-                
-                const fileData = await getResponse.json();
-                
-                // Atualizar arquivo
-                const updateResponse = await fetch(
-                    `https://api.github.com/repos/$${REPO_OWNER}/$${REPO_NAME}/contents/${FILE_PATH}`,
-                    {
-                        method: 'PUT',
-                        headers: {
-                            'Authorization': `token ${GITHUB_TOKEN}`,
-                            'Accept': 'application/vnd.github.v3+json',
-                            'Content-Type': 'application/json'
-                        },
-                        body: JSON.stringify({
-                            message: 'Atualização automática de documentos',
-                            content: btoa(JSON.stringify(data, null, 2)),
-                            sha: fileData.sha
-                        })
-                    }
-                );
-                
-                console.log('Dados sincronizados com GitHub');
-            } catch (error) {
-                console.error('Erro ao sincronizar com GitHub:', error);
-            }
-        }
-        */
 
         // ==================== AUTENTICAÇÃO ====================
-        function showTab(tab) {
-            document.getElementById('loginForm').classList.add('hidden');
-            document.getElementById('registerForm').classList.add('hidden');
+        function showLoginTab(tab) {
+            const loginForm = document.getElementById('loginForm');
+            const registerForm = document.getElementById('registerForm');
+            const tabs = document.querySelectorAll('.tabs .tab');
             
-            document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+            tabs.forEach(t => t.classList.remove('active'));
             
             if (tab === 'login') {
-                document.getElementById('loginForm').classList.remove('hidden');
-                event.target.classList.add('active');
+                loginForm.classList.remove('hidden');
+                registerForm.classList.add('hidden');
+                tabs[0].classList.add('active');
             } else {
-                document.getElementById('registerForm').classList.remove('hidden');
-                event.target.classList.add('active');
+                loginForm.classList.add('hidden');
+                registerForm.classList.remove('hidden');
+                tabs[1].classList.add('active');
             }
         }
 
         function handleLogin(event) {
             event.preventDefault();
             
-            const username = document.getElementById('loginUser').value;
+            const username = document.getElementById('loginUser').value.trim();
             const password = document.getElementById('loginPass').value;
             
             const user = users.find(u => u.username === username && u.password === password);
@@ -707,27 +584,28 @@
             if (user) {
                 currentUser = user;
                 isVisitor = false;
+                showNotification('Login realizado com sucesso!', 'success');
                 showMainScreen();
             } else {
-                alert('Usuário ou senha incorretos!');
+                showNotification('Usuário ou senha incorretos!', 'error');
             }
         }
 
         function handleRegister(event) {
             event.preventDefault();
             
-            const name = document.getElementById('regName').value;
-            const username = document.getElementById('regUser').value;
+            const name = document.getElementById('regName').value.trim();
+            const username = document.getElementById('regUser').value.trim();
             const password = document.getElementById('regPass').value;
             const confirmPass = document.getElementById('regPassConfirm').value;
             
             if (password !== confirmPass) {
-                alert('As senhas não coincidem!');
+                showNotification('As senhas não coincidem!', 'error');
                 return;
             }
             
             if (users.find(u => u.username === username) || pendingUsers.find(u => u.username === username)) {
-                alert('Este usuário já existe!');
+                showNotification('Este usuário já existe!', 'error');
                 return;
             }
             
@@ -736,33 +614,38 @@
                 name: name,
                 username: username,
                 password: password,
-                isAdmin: false
+                isAdmin: false,
+                createdAt: new Date().toISOString()
             };
             
-            // Se for o primeiro usuário, torna admin automaticamente
+            // Primeiro usuário vira admin automaticamente
             if (users.length === 0) {
                 newUser.isAdmin = true;
                 users.push(newUser);
-                alert('Cadastro realizado! Você é o primeiro usuário e foi definido como administrador.');
+                saveData();
+                showNotification('Cadastro realizado! Você é o administrador do sistema.', 'success');
+                
+                // Fazer login automático
+                currentUser = newUser;
+                isVisitor = false;
+                setTimeout(() => showMainScreen(), 1500);
             } else {
                 pendingUsers.push(newUser);
-                alert('Solicitação de cadastro enviada! Aguarde aprovação do administrador.');
+                saveData();
+                showNotification('Solicitação enviada! Aguarde aprovação do administrador.', 'success');
             }
-            
-            saveData();
             
             // Limpar formulário
             document.getElementById('regName').value = '';
             document.getElementById('regUser').value = '';
             document.getElementById('regPass').value = '';
             document.getElementById('regPassConfirm').value = '';
-            
-            showTab('login');
         }
 
         function acessarComoVisitante() {
             currentUser = null;
             isVisitor = true;
+            showNotification('Acessando como visitante (somente leitura)', 'info');
             showMainScreen();
         }
 
@@ -771,6 +654,7 @@
             isVisitor = false;
             document.getElementById('mainScreen').classList.add('hidden');
             document.getElementById('loginScreen').classList.remove('hidden');
+            showNotification('Logout realizado com sucesso!', 'success');
         }
 
         function showMainScreen() {
@@ -778,11 +662,13 @@
             document.getElementById('mainScreen').classList.remove('hidden');
             
             if (currentUser) {
-                document.getElementById('userName').textContent = currentUser.name;
+                document.getElementById('userName').textContent = currentUser.name + (currentUser.isAdmin ? ' (Admin)' : '');
                 
                 if (currentUser.isAdmin) {
                     document.getElementById('adminPanel').classList.remove('hidden');
-                    loadAdminPanel();
+                    loadPendingUsers();
+                } else {
+                    document.getElementById('adminPanel').classList.add('hidden');
                 }
                 
                 document.getElementById('addDocButton').classList.remove('hidden');
@@ -801,23 +687,22 @@
 
         // ==================== PAINEL DO ADMINISTRADOR ====================
         function showAdminTab(tab) {
-            document.getElementById('pendingUsers').classList.add('hidden');
-            document.getElementById('manageUsers').classList.add('hidden');
+            const pendingDiv = document.getElementById('pendingUsers');
+            const manageDiv = document.getElementById('manageUsers');
+            const tabs = document.querySelectorAll('#adminPanel .tab');
             
-            document.querySelectorAll('#adminPanel .tab').forEach(t => t.classList.remove('active'));
+            tabs.forEach(t => t.classList.remove('active'));
             event.target.classList.add('active');
             
             if (tab === 'pending') {
-                document.getElementById('pendingUsers').classList.remove('hidden');
+                pendingDiv.classList.remove('hidden');
+                manageDiv.classList.add('hidden');
                 loadPendingUsers();
             } else {
-                document.getElementById('manageUsers').classList.remove('hidden');
+                pendingDiv.classList.add('hidden');
+                manageDiv.classList.remove('hidden');
                 loadManageUsers();
             }
-        }
-
-        function loadAdminPanel() {
-            loadPendingUsers();
         }
 
         function loadPendingUsers() {
@@ -831,9 +716,9 @@
             container.innerHTML = pendingUsers.map(user => `
                 <div class="user-item">
                     <div>
-                        <strong>${user.name}</strong><br>
+                        <strong>${user.name}</strong>
+                        <span class="pending-badge">PENDENTE</span><br>
                         <small style="color: #666;">@${user.username}</small>
-                        <span class="pending-badge">PENDENTE</span>
                     </div>
                     <div class="action-buttons">
                         <button class="btn btn-success btn-small" onclick="approveUser(${user.id})">✓ Aprovar</button>
@@ -846,11 +731,16 @@
         function loadManageUsers() {
             const container = document.getElementById('manageUsers');
             
+            if (users.length === 0) {
+                container.innerHTML = '<p style="text-align: center; color: #666; padding: 20px;">Nenhum usuário cadastrado</p>';
+                return;
+            }
+            
             container.innerHTML = users.map(user => `
                 <div class="user-item">
                     <div>
                         <strong>${user.name}</strong>
-                        ${user.isAdmin ? '<span class="pending-badge" style="background: var(--cemig-azul); color: white;">ADMIN</span>' : ''}<br>
+                        ${user.isAdmin ? '<span class="admin-badge">ADMIN</span>' : ''}<br>
                         <small style="color: #666;">@${user.username}</small>
                     </div>
                     <div class="action-buttons">
@@ -860,25 +750,29 @@
                     </div>
                 </div>
             `).join('');
-        }if (userIndex !== -1) {
+        }
+
+        function approveUser(userId) {
+            const userIndex = pendingUsers.findIndex(u => u.id === userId);
+            if (userIndex !== -1) {
                 const user = pendingUsers[userIndex];
                 users.push(user);
                 pendingUsers.splice(userIndex, 1);
                 saveData();
                 loadPendingUsers();
-                loadManageUsers();
-                alert(`Usuário ${user.name} aprovado com sucesso!`);
+                showNotification(`Usuário ${user.name} aprovado com sucesso!`, 'success');
             }
         }
 
         function rejectUser(userId) {
             const userIndex = pendingUsers.findIndex(u => u.id === userId);
             if (userIndex !== -1) {
-                if (confirm('Deseja realmente rejeitar esta solicitação?')) {
+                if (confirm('Desejaif (confirm('Deseja realmente rejeitar esta solicitação?')) {
+                    const user = pendingUsers[userIndex];
                     pendingUsers.splice(userIndex, 1);
                     saveData();
                     loadPendingUsers();
-                    alert('Solicitação rejeitada!');
+                    showNotification(`Solicitação de ${user.name} rejeitada!`, 'success');
                 }
             }
         }
@@ -891,7 +785,7 @@
                     user.isAdmin = makeAdmin;
                     saveData();
                     loadManageUsers();
-                    alert('Permissões atualizadas com sucesso!');
+                    showNotification('Permissões atualizadas com sucesso!', 'success');
                 }
             }
         }
@@ -904,7 +798,7 @@
                     users.splice(index, 1);
                     saveData();
                     loadManageUsers();
-                    alert('Usuário excluído com sucesso!');
+                    showNotification(`Usuário ${user.name} excluído com sucesso!`, 'success');
                 }
             }
         }
@@ -926,13 +820,8 @@
         }
 
         function openModal(modalId) {
-            if (!currentUser && !isVisitor) {
-                alert('Faça login para adicionar documentos!');
-                return;
-            }
-            
-            if (isVisitor) {
-                alert('Visitantes não podem editar documentos. Faça login para continuar.');
+            if (!currentUser) {
+                showNotification('Faça login para adicionar documentos!', 'error');
                 return;
             }
             
@@ -984,11 +873,9 @@
             };
             
             if (docId) {
-                // Editar documento existente
                 const index = documents.findIndex(d => d.id === parseInt(docId));
                 documents[index] = doc;
             } else {
-                // Adicionar novo documento
                 documents.push(doc);
             }
             
@@ -998,7 +885,7 @@
             loadDocuments();
             createChart();
             
-            alert('Documento salvo com sucesso!');
+            showNotification('Documento salvo com sucesso!', 'success');
         }
 
         function editDocument(docId) {
@@ -1009,7 +896,6 @@
             document.getElementById('docId').value = doc.id;
             document.getElementById('docName').value = doc.name;
             
-            // Verificar se é um tipo padrão ou "OUTROS"
             const standardTypes = ['AVCB', 'ALVARÁ', 'LPU DE MOTOSSERRA', 'OUTORGA', 'TREINAMENTO', 'LICENCIAMENTO AMBIENTAL'];
             if (standardTypes.includes(doc.type)) {
                 document.getElementById('docType').value = doc.type;
@@ -1017,6 +903,7 @@
                 document.getElementById('docType').value = 'OUTROS';
                 document.getElementById('docTypeOther').value = doc.type;
                 document.getElementById('outroTipoContainer').style.display = 'block';
+                document.getElementById('docTypeOther').required = true;
             }
             
             document.getElementById('docEmission').value = doc.emission;
@@ -1035,7 +922,7 @@
                 updateDashboard();
                 loadDocuments();
                 createChart();
-                alert('Documento excluído com sucesso!');
+                showNotification('Documento excluído com sucesso!', 'success');
             }
         }
 
@@ -1044,14 +931,16 @@
             if (doc) {
                 const obsContent = document.getElementById('obsContent');
                 obsContent.textContent = doc.observations || 'Sem observações registradas.';
-                openModal('obsModal');
+                document.getElementById('obsModal').style.display = 'block';
             }
         }
 
         // ==================== CÁLCULOS E STATUS ====================
         function getDocumentStatus(validityDate) {
             const today = new Date();
+            today.setHours(0, 0, 0, 0);
             const validity = new Date(validityDate);
+            validity.setHours(0, 0, 0, 0);
             const diffTime = validity - today;
             const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
             
@@ -1089,7 +978,6 @@
                 return;
             }
             
-            // Ordenar por data de validade
             const sortedDocs = [...documents].sort((a, b) => new Date(a.validity) - new Date(b.validity));
             
             tbody.innerHTML = sortedDocs.map(doc => {
@@ -1107,9 +995,9 @@
                             ${hasObs ? `<span class="obs-icon" onclick="showObservations(${doc.id})" title="Ver observações">📋</span>` : '-'}
                         </td>
                         <td>
-                            ${doc.link ? `<a href="${doc.link}" target="_blank" style="color: var(--cemig-azul);">🔗 Abrir</a>` : '-'}
+                            ${doc.link ? `<a href="${doc.link}" target="_blank" style="color: var(--cemig-azul); text-decoration: none;">🔗 Abrir</a>` : '-'}
                         </td>
-                        <td class="${!currentUser || isVisitor ? 'hidden' : ''}">
+                        <td class="${!currentUser ? 'hidden' : ''}">
                             <div class="action-buttons">
                                 <button class="btn btn-primary btn-small" onclick="editDocument(${doc.id})">Editar</button>
                                 <button class="btn btn-danger btn-small" onclick="deleteDocument(${doc.id})">Excluir</button>
@@ -1121,17 +1009,15 @@
         }
 
         function formatDate(dateString) {
-            const date = new Date(dateString);
+            const date = new Date(dateString + 'T00:00:00');
             return date.toLocaleDateString('pt-BR');
         }
 
         // ==================== GRÁFICO ====================
-        let chartInstance = null;
-
         function createChart() {
-            const ctx = document.getElementById('expirationChart').getContext('2d');
+            const ctx = document.getElementById('expirationChart');
+            if (!ctx) return;
             
-            // Destruir gráfico anterior se existir
             if (chartInstance) {
                 chartInstance.destroy();
             }
@@ -1167,12 +1053,8 @@
                         tooltip: {
                             backgroundColor: 'rgba(0, 0, 0, 0.8)',
                             padding: 12,
-                            titleFont: {
-                                size: 14
-                            },
-                            bodyFont: {
-                                size: 13
-                            }
+                            titleFont: { size: 14 },
+                            bodyFont: { size: 13 }
                         }
                     },
                     scales: {
@@ -1180,9 +1062,7 @@
                             beginAtZero: true,
                             ticks: {
                                 stepSize: 1,
-                                font: {
-                                    size: 12
-                                }
+                                font: { size: 12 }
                             },
                             grid: {
                                 color: 'rgba(0, 0, 0, 0.05)'
@@ -1190,9 +1070,7 @@
                         },
                         x: {
                             ticks: {
-                                font: {
-                                    size: 12
-                                }
+                                font: { size: 12 }
                             },
                             grid: {
                                 display: false
@@ -1208,7 +1086,6 @@
             const labels = [];
             const data = [];
             
-            // Criar labels para os próximos 5 anos (10 semestres)
             for (let i = 0; i < 10; i++) {
                 const year = today.getFullYear() + Math.floor(i / 2);
                 const semester = (i % 2) + 1;
@@ -1216,7 +1093,6 @@
                 data.push(0);
             }
             
-            // Contar documentos por semestre
             documents.forEach(doc => {
                 const validity = new Date(doc.validity);
                 const diffYears = validity.getFullYear() - today.getFullYear();
@@ -1233,7 +1109,39 @@
             return { labels, data };
         }
 
-        // ==================== FECHAR MODAL AO CLICAR FORA ====================
+        // ==================== NOTIFICAÇÕES ====================
+        function showNotification(message, type = 'info') {
+            const notification = document.createElement('div');
+            const colors = {
+                success: '#28a745',
+                error: '#dc3545',
+                info: '#0067B1'
+            };
+            
+            notification.style.cssText = `
+                position: fixed;
+                top: 20px;
+                right: 20px;
+                padding: 15px 25px;
+                background: ${colors[type] || colors.info};
+                color: white;
+                border-radius: 5px;
+                box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+                z-index: 10000;
+                animation: slideIn 0.3s ease;
+                max-width: 300px;
+            `;
+            notification.textContent = message;
+            
+            document.body.appendChild(notification);
+            
+            setTimeout(() => {
+                notification.style.animation = 'slideOut 0.3s ease';
+                setTimeout(() => notification.remove(), 300);
+            }, 3000);
+        }
+
+        // ==================== EVENTOS ====================
         window.onclick = function(event) {
             if (event.target.classList.contains('modal')) {
                 event.target.style.display = 'none';
@@ -1250,6 +1158,3 @@
     </script>
 </body>
 </html>
-
-        function approveUser(userId) {
-            const userIndex = pendingUsers.findIndex(u => u.id === userId);
