@@ -3,7 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sistema de Controle de Documentos - CEMIG</title>
+    <title>Sistema de Controle de Documentos - Cemig</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         * {
             margin: 0;
@@ -11,28 +12,30 @@
             box-sizing: border-box;
         }
 
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
-            color: #333;
-            line-height: 1.6;
-        }
-
-        /* Cores CEMIG */
         :root {
             --cemig-blue: #0066CC;
-            --cemig-dark-blue: #004A99;
-            --cemig-light-blue: #3399FF;
-            --status-green: #28a745;
-            --status-yellow: #ffc107;
-            --status-red: #dc3545;
+            --cemig-dark-blue: #003D7A;
+            --cemig-light-blue: #4A90E2;
+            --success-green: #28a745;
+            --warning-yellow: #ffc107;
+            --danger-red: #dc3545;
+            --text-dark: #333;
+            --text-light: #666;
             --bg-light: #f8f9fa;
+            --white: #ffffff;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--bg-light);
+            color: var(--text-dark);
+            line-height: 1.6;
         }
 
         /* Header */
         .header {
             background: linear-gradient(135deg, var(--cemig-blue) 0%, var(--cemig-dark-blue) 100%);
-            color: white;
+            color: var(--white);
             padding: 20px 0;
             box-shadow: 0 2px 10px rgba(0,0,0,0.1);
         }
@@ -53,10 +56,15 @@
         }
 
         .logo {
-            font-size: 32px;
-            font-weight: bold;
-            color: white;
-            text-decoration: none;
+            height: 60px;
+            background: var(--white);
+            padding: 8px 20px;
+            border-radius: 8px;
+        }
+
+        .header h1 {
+            font-size: 24px;
+            font-weight: 600;
         }
 
         .user-section {
@@ -69,66 +77,62 @@
             text-align: right;
         }
 
-        .sync-status {
+        .user-name {
+            font-weight: 600;
+            font-size: 14px;
+        }
+
+        .user-role {
             font-size: 12px;
-            padding: 5px 10px;
-            border-radius: 15px;
-            background: rgba(255,255,255,0.2);
-            display: flex;
-            align-items: center;
-            gap: 5px;
-        }
-
-        .sync-indicator {
-            width: 8px;
-            height: 8px;
-            border-radius: 50%;
-            background: #28a745;
-            animation: pulse 2s infinite;
-        }
-
-        @keyframes pulse {
-            0%, 100% { opacity: 1; }
-            50% { opacity: 0.5; }
+            opacity: 0.9;
         }
 
         .btn {
             padding: 10px 20px;
             border: none;
-            border-radius: 5px;
+            border-radius: 6px;
             cursor: pointer;
             font-size: 14px;
-            font-weight: 600;
-            transition: all 0.3s;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-block;
         }
 
         .btn-primary {
-            background: var(--cemig-blue);
-            color: white;
+            background-color: var(--cemig-blue);
+            color: var(--white);
         }
 
         .btn-primary:hover {
-            background: var(--cemig-dark-blue);
+            background-color: var(--cemig-dark-blue);
             transform: translateY(-2px);
-        }
-
-        .btn-secondary {
-            background: white;
-            color: var(--cemig-blue);
-        }
-
-        .btn-secondary:hover {
-            background: var(--bg-light);
-        }
-
-        .btn-danger {
-            background: var(--status-red);
-            color: white;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
         }
 
         .btn-success {
-            background: var(--status-green);
-            color: white;
+            background-color: var(--success-green);
+            color: var(--white);
+        }
+
+        .btn-danger {
+            background-color: var(--danger-red);
+            color: var(--white);
+        }
+
+        .btn-secondary {
+            background-color: var(--text-light);
+            color: var(--white);
+        }
+
+        .btn-logout {
+            background-color: rgba(255,255,255,0.2);
+            color: var(--white);
+            border: 1px solid var(--white);
+        }
+
+        .btn-logout:hover {
+            background-color: rgba(255,255,255,0.3);
         }
 
         /* Container */
@@ -147,61 +151,85 @@
         }
 
         .card {
-            background: white;
-            border-radius: 10px;
+            background: var(--white);
+            border-radius: 12px;
             padding: 25px;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
-            transition: transform 0.3s;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
         }
 
         .card:hover {
             transform: translateY(-5px);
-            box-shadow: 0 6px 12px rgba(0,0,0,0.15);
+            box-shadow: 0 4px 16px rgba(0,0,0,0.15);
         }
 
-        .card-status {
-            border-left: 5px solid;
-        }
-
-        .card-status.valid {
-            border-color: var(--status-green);
-        }
-
-        .card-status.warning {
-            border-color: var(--status-yellow);
-        }
-
-        .card-status.expired {
-            border-color: var(--status-red);
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
         }
 
         .card-title {
             font-size: 14px;
-            color: #666;
-            margin-bottom: 10px;
+            font-weight: 600;
+            color: var(--text-light);
             text-transform: uppercase;
+        }
+
+        .card-icon {
+            font-size: 24px;
         }
 
         .card-value {
             font-size: 36px;
-            font-weight: bold;
-            color: var(--cemig-blue);
+            font-weight: 700;
+            margin-bottom: 5px;
+        }
+
+        .card-label {
+            font-size: 14px;
+            color: var(--text-light);
+        }
+
+        .card-valid {
+            border-left: 4px solid var(--success-green);
+        }
+
+        .card-valid .card-value {
+            color: var(--success-green);
+        }
+
+        .card-warning {
+            border-left: 4px solid var(--warning-yellow);
+        }
+
+        .card-warning .card-value {
+            color: var(--warning-yellow);
+        }
+
+        .card-expired {
+            border-left: 4px solid var(--danger-red);
+        }
+
+        .card-expired .card-value {
+            color: var(--danger-red);
         }
 
         /* Chart */
         .chart-container {
-            background: white;
-            border-radius: 10px;
+            background: var(--white);
+            border-radius: 12px;
             padding: 25px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
             margin-bottom: 30px;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
         }
 
         .chart-title {
-            font-size: 20px;
-            font-weight: bold;
+            font-size: 18px;
+            font-weight: 600;
             margin-bottom: 20px;
-            color: var(--cemig-blue);
+            color: var(--cemig-dark-blue);
         }
 
         #expirationChart {
@@ -209,12 +237,35 @@
             height: 300px;
         }
 
+        /* Actions */
+        .actions-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+
+        .search-box {
+            flex: 1;
+            min-width: 250px;
+        }
+
+        .search-box input {
+            width: 100%;
+            padding: 12px 20px;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            font-size: 14px;
+        }
+
         /* Table */
         .table-container {
-            background: white;
-            border-radius: 10px;
+            background: var(--white);
+            border-radius: 12px;
             padding: 25px;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
             overflow-x: auto;
         }
 
@@ -223,45 +274,84 @@
             border-collapse: collapse;
         }
 
-        th, td {
-            padding: 12px;
-            text-align: left;
-            border-bottom: 1px solid #ddd;
+        thead {
+            background-color: var(--cemig-blue);
+            color: var(--white);
         }
 
         th {
-            background: var(--cemig-blue);
-            color: white;
+            padding: 15px;
+            text-align: left;
             font-weight: 600;
-            position: sticky;
-            top: 0;
+            font-size: 14px;
+            text-transform: uppercase;
         }
 
-        tr:hover {
-            background: var(--bg-light);
+        td {
+            padding: 15px;
+            border-bottom: 1px solid #eee;
+            font-size: 14px;
+        }
+
+        tbody tr:hover {
+            background-color: var(--bg-light);
         }
 
         .status-badge {
-            padding: 5px 10px;
+            display: inline-block;
+            padding: 5px 12px;
             border-radius: 20px;
             font-size: 12px;
-            font-weight: bold;
-            display: inline-block;
+            font-weight: 600;
         }
 
         .status-valid {
-            background: var(--status-green);
-            color: white;
+            background-color: rgba(40, 167, 69, 0.1);
+            color: var(--success-green);
         }
 
         .status-warning {
-            background: var(--status-yellow);
-            color: #333;
+            background-color: rgba(255, 193, 7, 0.1);
+            color: #d39e00;
         }
 
         .status-expired {
-            background: var(--status-red);
-            color: white;
+            background-color: rgba(220, 53, 69, 0.1);
+            color: var(--danger-red);
+        }
+
+        .action-icons {
+            display: flex;
+            gap: 10px;
+        }
+
+        .icon-btn {
+            background: none;
+            border: none;
+            cursor: pointer;
+            font-size: 16px;
+            padding: 5px;
+            transition: all 0.3s ease;
+        }
+
+        .icon-btn:hover {
+            transform: scale(1.2);
+        }
+
+        .icon-btn.view {
+            color: var(--cemig-blue);
+        }
+
+        .icon-btn.edit {
+            color: var(--warning-yellow);
+        }
+
+        .icon-btn.delete {
+            color: var(--danger-red);
+        }
+
+        .icon-btn.info {
+            color: var(--text-light);
         }
 
         /* Modal */
@@ -273,8 +363,8 @@
             top: 0;
             width: 100%;
             height: 100%;
-            background: rgba(0,0,0,0.5);
-            animation: fadeIn 0.3s;
+            background-color: rgba(0,0,0,0.5);
+            animation: fadeIn 0.3s ease;
         }
 
         @keyframes fadeIn {
@@ -283,15 +373,14 @@
         }
 
         .modal-content {
-            background: white;
-            margin: 50px auto;
-            padding: 30px;
-            border-radius: 10px;
+            background-color: var(--white);
+            margin: 5% auto;
+            padding: 0;
+            border-radius: 12px;
             width: 90%;
             max-width: 600px;
-            max-height: 90vh;
-            overflow-y: auto;
-            animation: slideDown 0.3s;
+            box-shadow: 0 5px 30px rgba(0,0,0,0.3);
+            animation: slideDown 0.3s ease;
         }
 
         @keyframes slideDown {
@@ -306,206 +395,210 @@
         }
 
         .modal-header {
+            background: linear-gradient(135deg, var(--cemig-blue) 0%, var(--cemig-dark-blue) 100%);
+            color: var(--white);
+            padding: 20px 25px;
+            border-radius: 12px 12px 0 0;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 20px;
-            padding-bottom: 15px;
-            border-bottom: 2px solid var(--cemig-blue);
         }
 
-        .modal-title {
-            font-size: 24px;
-            font-weight: bold;
-            color: var(--cemig-blue);
+        .modal-header h2 {
+            font-size: 20px;
+            font-weight: 600;
         }
 
         .close {
+            color: var(--white);
             font-size: 28px;
             font-weight: bold;
-            color: #999;
             cursor: pointer;
-            transition: color 0.3s;
+            background: none;
+            border: none;
+            padding: 0;
+            width: 30px;
+            height: 30px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            transition: background-color 0.3s ease;
         }
 
         .close:hover {
-            color: var(--status-red);
+            background-color: rgba(255,255,255,0.2);
         }
 
-        /* Form */
+        .modal-body {
+            padding: 25px;
+        }
+
         .form-group {
             margin-bottom: 20px;
         }
 
-        label {
+        .form-group label {
             display: block;
-            margin-bottom: 5px;
+            margin-bottom: 8px;
             font-weight: 600;
-            color: #555;
-        }
-
-        input, select, textarea {
-            width: 100%;
-            padding: 10px;
-            border: 2px solid #ddd;
-            border-radius: 5px;
+            color: var(--text-dark);
             font-size: 14px;
-            transition: border-color 0.3s;
         }
 
-        input:focus, select:focus, textarea:focus {
+        .form-group input,
+        .form-group select,
+        .form-group textarea {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            font-size: 14px;
+            font-family: inherit;
+            transition: border-color 0.3s ease;
+        }
+
+        .form-group input:focus,
+        .form-group select:focus,
+        .form-group textarea:focus {
             outline: none;
             border-color: var(--cemig-blue);
+            box-shadow: 0 0 0 3px rgba(0, 102, 204, 0.1);
         }
 
-        textarea {
+        .form-group textarea {
             resize: vertical;
-            min-height: 80px;
+            min-height: 100px;
         }
 
-        .hidden {
-            display: none;
-        }
-
-        /* Icons */
-        .icon-btn {
-            background: none;
-            border: none;
-            cursor: pointer;
-            font-size: 18px;
-            padding: 5px;
-            transition: transform 0.2s;
-        }
-
-        .icon-btn:hover {
-            transform: scale(1.2);
-        }
-
-        .actions {
+        .modal-footer {
+            padding: 20px 25px;
+            border-top: 1px solid #eee;
             display: flex;
+            justify-content: flex-end;
             gap: 10px;
         }
 
-        /* Login Screen */
+        /* Login Page */
         .login-container {
-            max-width: 400px;
-            margin: 100px auto;
-            background: white;
-            padding: 40px;
-            border-radius: 10px;
-            box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            background: linear-gradient(135deg, var(--cemig-blue) 0%, var(--cemig-dark-blue) 100%);
         }
 
-        .login-title {
-            text-align: center;
-            color: var(--cemig-blue);
-            margin-bottom: 30px;
-            font-size: 28px;
+        .login-box {
+            background: var(--white);
+            padding: 40px;
+            border-radius: 12px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+            width: 100%;
+            max-width: 400px;
         }
 
         .login-logo {
             text-align: center;
-            font-size: 48px;
+            margin-bottom: 30px;
+        }
+
+        .login-logo img {
+            height: 60px;
+            margin-bottom: 20px;
+        }
+
+        .login-title {
+            text-align: center;
+            color: var(--cemig-dark-blue);
+            font-size: 24px;
+            font-weight: 600;
+            margin-bottom: 30px;
+        }
+
+        .login-links {
+            text-align: center;
+            margin-top: 20px;
+        }
+
+        .login-links a {
             color: var(--cemig-blue);
-            margin-bottom: 20px;
+            text-decoration: none;
+            font-size: 14px;
         }
 
-        .toolbar {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 20px;
-            flex-wrap: wrap;
-            gap: 10px;
-        }
-
-        .search-box {
-            flex: 1;
-            min-width: 250px;
+        .login-links a:hover {
+            text-decoration: underline;
         }
 
         /* Admin Panel */
-        .admin-panel {
-            background: white;
-            border-radius: 10px;
-            padding: 25px;
-            margin-bottom: 30px;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        .admin-tabs {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+            border-bottom: 2px solid #eee;
+        }
+
+        .admin-tab {
+            padding: 12px 24px;
+            background: none;
+            border: none;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--text-light);
+            border-bottom: 3px solid transparent;
+            transition: all 0.3s ease;
+        }
+
+        .admin-tab.active {
+            color: var(--cemig-blue);
+            border-bottom-color: var(--cemig-blue);
+        }
+
+        .admin-tab:hover {
+            color: var(--cemig-blue);
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
         }
 
         .user-list {
-            list-style: none;
+            display: grid;
+            gap: 15px;
         }
 
         .user-item {
+            background: var(--white);
+            padding: 20px;
+            border-radius: 8px;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            padding: 15px;
-            border-bottom: 1px solid #ddd;
+            border: 1px solid #eee;
         }
 
-        .user-item:hover {
-            background: var(--bg-light);
+        .user-item-info h3 {
+            font-size: 16px;
+            margin-bottom: 5px;
         }
 
-        .badge {
-            padding: 3px 8px;
-            border-radius: 12px;
-            font-size: 11px;
-            font-weight: bold;
-            margin-left: 10px;
+        .user-item-info p {
+            font-size: 14px;
+            color: var(--text-light);
         }
 
-        .badge-admin {
-            background: var(--cemig-blue);
-            color: white;
+        .user-item-actions {
+            display: flex;
+            gap: 10px;
         }
 
-        .badge-pending {
-            background: var(--status-yellow);
-            color: #333;
-        }
-
-        .loading {
-            text-align: center;
-            padding: 40px;
-            color: #666;
-        }
-
-        .loading-spinner {
-            border: 4px solid #f3f3f3;
-            border-top: 4px solid var(--cemig-blue);
-            border-radius: 50%;
-            width: 40px;
-            height: 40px;
-            animation: spin 1s linear infinite;
-            margin: 20px auto;
-        }
-
-        @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-        }
-
-        .config-panel {
-            background: #fff3cd;
-            border: 2px solid #ffc107;
-            border-radius: 10px;
-            padding: 20px;
-            margin-bottom: 30px;
-        }
-
-        .config-panel h3 {
-            color: #856404;
-            margin-bottom: 15px;
-        }
-
-        .config-panel code {
-            background: #fff;
-            padding: 2px 6px;
-            border-radius: 3px;
-            color: #d63384;
+        .hidden {
+            display: none !important;
         }
 
         /* Responsive */
@@ -513,6 +606,11 @@
             .header-content {
                 flex-direction: column;
                 gap: 15px;
+                text-align: center;
+            }
+
+            .logo-section {
+                flex-direction: column;
             }
 
             .dashboard {
@@ -524,164 +622,126 @@
             }
 
             th, td {
-                padding: 8px;
+                padding: 10px;
             }
         }
     </style>
 </head>
 <body>
-    <!-- Configuration Modal (First Access) -->
-    <div id="configModal" class="modal" style="display: none;">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h2 class="modal-title">⚙️ Configuração Inicial</h2>
+    <!-- Login Page -->
+    <div id="loginPage" class="login-container">
+        <div class="login-box">
+            <div class="login-logo">
+                <svg height="60" viewBox="0 0 200 60" xmlns="http://www.w3.org/2000/svg">
+                    <rect x="10" y="10" width="180" height="40" fill="#0066CC" rx="5"/>
+                    <text x="100" y="40" font-family="Arial, sans-serif" font-size="24" font-weight="bold" fill="white" text-anchor="middle">CEMIG</text>
+                </svg>
             </div>
-            <div class="config-panel">
-                <h3>📋 Instruções de Configuração</h3>
-                <p style="margin-bottom: 15px;">Para sincronização em tempo real, você precisa configurar o Firebase:</p>
-                
-                <ol style="margin-left: 20px; line-height: 2;">
-                    <li>Acesse <a href="https://firebase.google.com" target="_blank">Firebase Console</a></li>
-                    <li>Crie um novo projeto (gratuito)</li>
-                    <li>Ative o <strong>Realtime Database</strong></li>
-                    <li>Configure as regras como <code>public</code> (temporariamente)</li>
-                    <li>Copie as credenciais do Firebase</li>
-                    <li>Cole abaixo:</li>
-                </ol>
-            </div>
-
-            <form id="configForm">
-                <div class="form-group">
-                    <label>Firebase API Key *</label>
-                    <input type="text" id="firebaseApiKey" required placeholder="AIza...">
-                </div>
-                <div class="form-group">
-                    <label>Firebase Project ID *</label>
-                    <input type="text" id="firebaseProjectId" required placeholder="seu-projeto">
-                </div>
-                <div class="form-group">
-                    <label>Firebase Database URL *</label>
-                    <input type="text" id="firebaseDatabaseUrl" required placeholder="https://seu-projeto.firebaseio.com">
-                </div>
-                <div class="form-group">
-                    <label>GitHub Token (opcional - para backup)</label>
-                    <input type="text" id="githubToken" placeholder="ghp_...">
-                </div>
-                <div class="form-group">
-                    <label>GitHub Repo (opcional)</label>
-                    <input type="text" id="githubRepo" placeholder="usuario/repositorio">
-                </div>
-                <button type="submit" class="btn btn-primary" style="width: 100%;">Salvar Configuração</button>
-            </form>
-            
-            <div style="margin-top: 20px; padding: 15px; background: #d1ecf1; border-radius: 5px; border-left: 4px solid #0c5460;">
-                <strong>💡 Dica:</strong> Use o modo de demonstração para testar (dados não serão sincronizados).
-                <button class="btn btn-secondary" onclick="useDemoMode()" style="margin-top: 10px; width: 100%;">Usar Modo Demonstração</button>
-            </div>
-        </div>
-    </div>
-
-    <!-- Login Screen -->
-    <div id="loginScreen">
-        <div class="login-container">
-            <div class="login-logo">⚡</div>
-            <h2 class="login-title">CEMIG Documentos</h2>
-            <div id="loginLoading" class="loading hidden">
-                <div class="loading-spinner"></div>
-                <p>Conectando...</p>
-            </div>
+            <h2 class="login-title">Sistema de Documentos</h2>
             <form id="loginForm">
                 <div class="form-group">
-                    <label>Usuário</label>
+                    <label for="loginUsername">Usuário</label>
                     <input type="text" id="loginUsername" required>
                 </div>
                 <div class="form-group">
-                    <label>Senha</label>
+                    <label for="loginPassword">Senha</label>
                     <input type="password" id="loginPassword" required>
                 </div>
                 <button type="submit" class="btn btn-primary" style="width: 100%;">Entrar</button>
             </form>
-            <div style="text-align: center; margin-top: 20px;">
-                <a href="#" onclick="showRegisterModal()" style="color: var(--cemig-blue); text-decoration: none;">Solicitar Cadastro</a>
-                <br><br>
-                <a href="#" onclick="showConfigModal()" style="color: #666; text-decoration: none; font-size: 12px;">⚙️ Reconfigurar Sistema</a>
+            <div class="login-links">
+                <a href="#" id="registerLink">Solicitar Cadastro</a>
             </div>
         </div>
     </div>
 
-    <!-- Main App -->
+    <!-- Main Application -->
     <div id="mainApp" class="hidden">
         <!-- Header -->
-        <div class="header">
+        <header class="header">
             <div class="header-content">
                 <div class="logo-section">
-                    <div class="logo">⚡ CEMIG</div>
+                    <svg class="logo" height="60" viewBox="0 0 200 60" xmlns="http://www.w3.org/2000/svg">
+                        <rect x="10" y="10" width="180" height="40" fill="#0066CC" rx="5"/>
+                        <text x="100" y="40" font-family="Arial, sans-serif" font-size="24" font-weight="bold" fill="white" text-anchor="middle">CEMIG</text>
+                    </svg>
                     <h1>Sistema de Controle de Documentos</h1>
                 </div>
                 <div class="user-section">
-                    <div class="sync-status">
-                        <div class="sync-indicator"></div>
-                        <span id="syncStatus">Sincronizado</span>
-                    </div>
                     <div class="user-info">
-                        <div id="currentUser"></div>
-                        <div id="userRole" style="font-size: 12px; opacity: 0.8;"></div>
+                        <div class="user-name" id="userName"></div>
+                        <div class="user-role" id="userRole"></div>
                     </div>
-                    <button class="btn btn-secondary" onclick="logout()">Sair</button>
+                    <button class="btn btn-logout" onclick="logout()">
+                        <i class="fas fa-sign-out-alt"></i> Sair
+                    </button>
                 </div>
             </div>
-        </div>
+        </header>
 
-        <!-- Container -->
+        <!-- Main Container -->
         <div class="container">
             <!-- Dashboard -->
             <div class="dashboard">
-                <div class="card card-status valid">
-                    <div class="card-title">✓ Documentos Válidos</div>
+                <div class="card card-valid">
+                    <div class="card-header">
+                        <span class="card-title">Documentos Válidos</span>
+                        <i class="fas fa-check-circle card-icon" style="color: var(--success-green);"></i>
+                    </div>
                     <div class="card-value" id="validCount">0</div>
+                    <div class="card-label">Em conformidade</div>
                 </div>
-                <div class="card card-status warning">
-                    <div class="card-title">⚠ Vencendo em 90 dias</div>
+
+                <div class="card card-warning">
+                    <div class="card-header">
+                        <span class="card-title">Próximos ao Vencimento</span>
+                        <i class="fas fa-exclamation-triangle card-icon" style="color: var(--warning-yellow);"></i>
+                    </div>
                     <div class="card-value" id="warningCount">0</div>
+                    <div class="card-label">Menos de 90 dias</div>
                 </div>
-                <div class="card card-status expired">
-                    <div class="card-title">✗ Documentos Vencidos</div>
+
+                <div class="card card-expired">
+                    <div class="card-header">
+                        <span class="card-title">Documentos Vencidos</span>
+                        <i class="fas fa-times-circle card-icon" style="color: var(--danger-red);"></i>
+                    </div>
                     <div class="card-value" id="expiredCount">0</div>
+                    <div class="card-label">Requer atenção</div>
                 </div>
+
                 <div class="card">
-                    <div class="card-title">📊 Total de Documentos</div>
-                    <div class="card-value" id="totalCount">0</div>
+                    <div class="card-header">
+                        <span class="card-title">Total de Documentos</span>
+                        <i class="fas fa-file-alt card-icon" style="color: var(--cemig-blue);"></i>
+                    </div>
+                    <div class="card-value" id="totalCount" style="color: var(--cemig-blue);">0</div>
+                    <div class="card-label">Cadastrados</div>
                 </div>
             </div>
 
             <!-- Chart -->
             <div class="chart-container">
-                <div class="chart-title">📅 Documentos a Vencer por Semestre (Próximos 5 Anos)</div>
+                <h3 class="chart-title">Vencimentos por Semestre - Próximos 5 Anos</h3>
                 <canvas id="expirationChart"></canvas>
             </div>
 
-            <!-- Admin Panel -->
-            <div id="adminPanel" class="admin-panel hidden">
-                <h3 style="color: var(--cemig-blue); margin-bottom: 20px;">👑 Painel do Administrador</h3>
-                <div class="toolbar">
-                    <button class="btn btn-primary" onclick="showAddUserModal()">+ Adicionar Usuário</button>
-                </div>
-                <h4 style="margin: 20px 0 10px 0;">Solicitações Pendentes</h4>
-                <ul class="user-list" id="pendingUsersList"></ul>
-                <h4 style="margin: 20px 0 10px 0;">Usuários Cadastrados</h4>
-                <ul class="user-list" id="usersList"></ul>
-            </div>
-
-            <!-- Toolbar -->
-            <div class="toolbar">
+            <!-- Actions Bar -->
+            <div class="actions-bar">
                 <div class="search-box">
-                    <input type="text" id="searchInput" placeholder="🔍 Buscar documentos..." onkeyup="filterDocuments()">
+                    <input type="text" id="searchInput" placeholder="🔍 Pesquisar documentos...">
                 </div>
-                <button class="btn btn-primary" id="addDocBtn" onclick="showAddModal()">+ Novo Documento</button>
-                <button class="btn btn-secondary" id="adminBtn" onclick="toggleAdminPanel()">👑 Administração</button>
+                <div>
+                    <button class="btn btn-primary" id="addDocBtn" onclick="openAddDocModal()">
+                        <i class="fas fa-plus"></i> Novo Documento
+                    </button>
+                    <button class="btn btn-secondary" id="adminBtn" onclick="openAdminModal()">
+                        <i class="fas fa-users-cog"></i> Administração
+                    </button>
+                </div>
             </div>
 
-            <!-- Table -->
+            <!-- Documents Table -->
             <div class="table-container">
                 <table id="documentsTable">
                     <thead>
@@ -691,1088 +751,1086 @@
                             <th>Data de Emissão</th>
                             <th>Data de Validade</th>
                             <th>Status</th>
-                            <th>Link</th>
-                            <th>Obs</th>
                             <th>Ações</th>
                         </tr>
                     </thead>
-                    <tbody id="documentsBody">
-                        <tr>
-                            <td colspan="8" class="loading">
-                                <div class="loading-spinner"></div>
-                                <p>Carregando documentos...</p>
-                            </td>
-                        </tr>
+                    <tbody id="documentsTableBody">
+                        <!-- Documents will be loaded here -->
                     </tbody>
                 </table>
             </div>
         </div>
     </div>
 
-    <!-- Modal Add/Edit Document -->
+    <!-- Add/Edit Document Modal -->
     <div id="documentModal" class="modal">
         <div class="modal-content">
             <div class="modal-header">
-                <h2 class="modal-title" id="modalTitle">Novo Documento</h2>
-                <span class="close" onclick="closeModal('documentModal')">&times;</span>
+                <h2 id="modalTitle">Novo Documento</h2>
+                <button class="close" onclick="closeDocumentModal()">&times;</button>
             </div>
-            <form id="documentForm">
-                <input type="hidden" id="docId">
-                <div class="form-group">
-                    <label>Nome do Documento *</label>
-                    <input type="text" id="docName" required>
-                </div>
-                <div class="form-group">
-                    <label>Tipo de Documento *</label>
-                    <select id="docType" required onchange="toggleOtherType()">
-                        <option value="">Selecione...</option>
-                        <option value="AVCB">AVCB</option>
-                        <option value="ALVARÁ">ALVARÁ</option>
-                        <option value="LPU DE MOTOSSERRA">LPU DE MOTOSSERRA</option>
-                        <option value="OUTORGA">OUTORGA</option>
-                        <option value="TREINAMENTO">TREINAMENTO</option>
-                        <option value="LICENCIAMENTO AMBIENTAL">LICENCIAMENTO AMBIENTAL</option>
-                        <option value="OUTROS">OUTROS</option>
-                    </select>
-                </div>
-                <div class="form-group hidden" id="otherTypeGroup">
-                    <label>Especifique o Tipo *</label>
-                    <input type="text" id="docTypeOther">
-                </div>
-                <div class="form-group">
-                    <label>Data de Emissão *</label>
-                    <input type="date" id="docIssueDate" required>
-                </div>
-                <div class="form-group">
-                    <label>Data de Validade *</label>
-                    <input type="date" id="docExpiryDate" required>
-                </div>
-                <div class="form-group">
-                    <label>Link do Documento</label>
-                    <input type="url" id="docLink" placeholder="https://...">
-                </div>
-                <div class="form-group">
-                    <label>Observações</label>
-                    <textarea id="docObservations" placeholder="Insira observações sobre o documento..."></textarea>
-                </div>
-                <div style="display: flex; gap: 10px; justify-content: flex-end;">
-                    <button type="button" class="btn btn-secondary" onclick="closeModal('documentModal')">Cancelar</button>
-                    <button type="submit" class="btn btn-primary">Salvar</button>
-                </div>
-            </form>
-        </div>
-    </div>
+            <div class="modal-body">
+                <form id="documentForm">
+                    <input type="hidden" id="docId">
+                    
+                    <div class="form-group">
+                        <label for="docName">Nome do Documento *</label>
+                        <input type="text" id="docName" required>
+                    </div>
 
-    <!-- Modal Observations -->
-    <div id="observationsModal" class="modal">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h2 class="modal-title">📝 Observações</h2>
-                <span class="close" onclick="closeModal('observationsModal')">&times;</span>
+                    <div class="form-group">
+                        <label for="docType">Tipo de Documento *</label>
+                        <select id="docType" required onchange="handleDocTypeChange()">
+                            <option value="">Selecione...</option>
+                            <option value="AVCB">AVCB</option>
+                            <option value="ALVARÁ">ALVARÁ</option>
+                            <option value="LPU DE MOTOSSERRA">LPU DE MOTOSSERRA</option>
+                            <option value="OUTORGA">OUTORGA</option>
+                            <option value="TREINAMENTO">TREINAMENTO</option>
+                            <option value="LICENCIAMENTO AMBIENTAL">LICENCIAMENTO AMBIENTAL</option>
+                            <option value="OUTROS">OUTROS</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group hidden" id="docTypeOtherGroup">
+                        <label for="docTypeOther">Especifique o Tipo *</label>
+                        <input type="text" id="docTypeOther">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="docIssueDate">Data de Emissão *</label>
+                        <input type="date" id="docIssueDate" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="docExpiryDate">Data de Validade *</label>
+                        <input type="date" id="docExpiryDate" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="docLink">Link do Documento</label>
+                        <input type="url" id="docLink" placeholder="https://">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="docObservations">Observações</label>
+                        <textarea id="docObservations" placeholder="Insira observações sobre o documento..."></textarea>
+                    </div>
+                </form>
             </div>
-            <div id="observationsContent" style="padding: 20px; background: var(--bg-light); border-radius: 5px; min-height: 100px;"></div>
-            <div style="margin-top: 20px; text-align: right;">
-                <button class="btn btn-secondary" onclick="closeModal('observationsModal')">Fechar</button>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" onclick="closeDocumentModal()">Cancelar</button>
+                <button class="btn btn-success" onclick="saveDocument()">Salvar</button>
             </div>
         </div>
     </div>
 
-    <!-- Modal Register -->
+    <!-- Register Modal -->
     <div id="registerModal" class="modal">
         <div class="modal-content">
             <div class="modal-header">
-                <h2 class="modal-title">Solicitar Cadastro</h2>
-                <span class="close" onclick="closeModal('registerModal')">&times;</span>
+                <h2>Solicitar Cadastro</h2>
+                <button class="close" onclick="closeRegisterModal()">&times;</button>
             </div>
-            <form id="registerForm">
-                <div class="form-group">
-                    <label>Nome Completo *</label>
-                    <input type="text" id="regName" required>
-                </div>
-                <div class="form-group">
-                    <label>Email *</label>
-                    <input type="email" id="regEmail" required>
-                </div>
-                <div class="form-group">
-                    <label>Usuário *</label>
-                    <input type="text" id="regUsername" required>
-                </div>
-                <div class="form-group">
-                    <label>Senha *</label>
-                    <input type="password" id="regPassword" required>
-                </div>
-                <div style="display: flex; gap: 10px; justify-content: flex-end;">
-                    <button type="button" class="btn btn-secondary" onclick="closeModal('registerModal')">Cancelar</button>
-                    <button type="submit" class="btn btn-primary">Solicitar</button>
-                </div>
-            </form>
+            <div class="modal-body">
+                <form id="registerForm">
+                    <div class="form-group">
+                        <label for="regName">Nome Completo *</label>
+                        <input type="text" id="regName" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="regUsername">Nome de Usuário *</label>
+                        <input type="text" id="regUsername" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="regEmail">E-mail *</label>
+                        <input type="email" id="regEmail" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="regPassword">Senha *</label>
+                        <input type="password" id="regPassword" required minlength="6">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="regPasswordConfirm">Confirmar Senha *</label>
+                        <input type="password" id="regPasswordConfirm" required minlength="6">
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" onclick="closeRegisterModal()">Cancelar</button>
+                <button class="btn btn-success" onclick="submitRegistration()">Solicitar Cadastro</button>
+            </div>
         </div>
     </div>
 
-    <!-- Modal Add User (Admin) -->
-    <div id="addUserModal" class="modal">
-        <div class="modal-content">
+    <!-- Admin Modal -->
+    <div id="adminModal" class="modal">
+        <div class="modal-content" style="max-width: 800px;">
             <div class="modal-header">
-                <h2 class="modal-title">Adicionar Usuário</h2>
-                <span class="close" onclick="closeModal('addUserModal')">&times;</span>
+                <h2>Painel de Administração</h2>
+                <button class="close" onclick="closeAdminModal()">&times;</button>
             </div>
+            <div class="modal-body">
+                <div class="admin-tabs">
+                    <button class="admin-tab active" onclick="switchAdminTab('users')">Usuários</button>
+                    <button class="admin-tab" onclick="switchAdminTab('pending')">Solicitações Pendentes</button>
+                    <button class="admin-tab" onclick="switchAdminTab('settings')">Configurações</button>
+                </div>
+
+                <div id="usersTab" class="tab-content active">
+                    <div style="margin-bottom: 20px;">
+                        <button class="btn btn-primary" onclick="openAddUserModal()">
+                            <i class="fas fa-user-plus"></i> Adicionar Usuário
+                        </button>
+                    </div>
+                    <div class="user-list" id="usersList">
+                        <!-- Users will be loaded here -->
+                    </div>
+                </div>
+
+                <div id="pendingTab" class="tab-content">
+                    <div class="user-list" id="pendingUsersList">
+                        <!-- Pending users will be loaded here -->
+                    </div>
+                </div>
+
+                <div id="settingsTab" class="tab-content">
+                    <form id="settingsForm">
+                        <div class="form-group">
+                            <label for="changePassword<div class="form-group">
+                        <label for="changePasswordConfirm">Confirmar Nova Senha</label>
+                        <input type="password" id="changePassword">Nova Senha</label>
+<input type="password" id="changePassword" minlength="6">
+</div>Confirm" minlength="6">
+                    </div>
+
+                    <button type="button" class="btn btn-primary" onclick="changePassword()">
+                        <i class="fas fa-key"></i> Alterar Senha
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Observations Modal -->
+<div id="observationsModal" class="modal">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h2>Observações</h2>
+            <button class="close" onclick="closeObservationsModal()">&times;</button>
+        </div>
+        <div class="modal-body">
+            <p id="observationsText" style="white-space: pre-wrap;"></p>
+        </div>
+        <div class="modal-footer">
+            <button class="btn btn-secondary" onclick="closeObservationsModal()">Fechar</button>
+        </div>
+    </div>
+</div>
+
+<!-- Add User Modal -->
+<div id="addUserModal" class="modal">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h2>Adicionar Novo Usuário</h2>
+            <button class="close" onclick="closeAddUserModal()">&times;</button>
+        </div>
+        <div class="modal-body">
             <form id="addUserForm">
                 <div class="form-group">
-                    <label>Nome Completo *</label>
-                    <input type="text" id="addUserName" required>
+                    <label for="newUserName">Nome Completo *</label>
+                    <input type="text" id="newUserName" required>
                 </div>
+
                 <div class="form-group">
-                    <label>Email *</label>
-                    <input type="email" id="addUserEmail" required>
+                    <label for="newUsername">Nome de Usuário *</label>
+                    <input type="text" id="newUsername" required>
                 </div>
+
                 <div class="form-group">
-                    <label>Usuário *</label>
-                    <input type="text" id="addUserUsername" required>
+                    <label for="newUserEmail">E-mail *</label>
+                    <input type="email" id="newUserEmail" required>
                 </div>
+
                 <div class="form-group">
-                    <label>Senha *</label>
-                    <input type="password" id="addUserPassword" required>
+                    <label for="newUserPassword">Senha *</label>
+                    <input type="password" id="newUserPassword" required minlength="6">
                 </div>
+
                 <div class="form-group">
                     <label>
-                        <input type="checkbox" id="addUserAdmin">
-                        Conceder privilégios de administrador
+                        <input type="checkbox" id="newUserAdmin"> Conceder privilégios de administrador
                     </label>
-                </div>
-                <div style="display: flex; gap: 10px; justify-content: flex-end;">
-                    <button type="button" class="btn btn-secondary" onclick="closeModal('addUserModal')">Cancelar</button>
-                    <button type="submit" class="btn btn-primary">Adicionar</button>
                 </div>
             </form>
         </div>
+        <div class="modal-footer">
+            <button class="btn btn-secondary" onclick="closeAddUserModal()">Cancelar</button>
+            <button class="btn btn-success" onclick="saveNewUser()">Adicionar Usuário</button>
+        </div>
     </div>
+</div>
 
-    <script>
-        // =============================================
-        // FIREBASE DATABASE INTEGRATION
-        // =============================================
-        
-        let firebaseConfig = null;
-        let githubConfig = null;
-        let demoMode = false;
-        let db = null;
-        let currentUser = null;
-        let documents = [];
-        let users = [];
-        let pendingUsers = [];
-        let documentListeners = [];
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+    // ============================================
+    // CONFIGURAÇÃO - IMPORTANTE!
+    // ============================================
+    const GITHUB_CONFIG = {
+        owner: 'SEU_USUARIO_GITHUB',
+        repo: 'SEU_REPOSITORIO',
+        branch: 'main',
+        // NÃO coloque o token aqui! Veja instruções no final do arquivo
+        token: 'SEU_TOKEN_AQUI' // TEMPORÁRIO - Veja solução correta abaixo
+    };
 
-        // Check if already configured
-        function checkConfiguration() {
-            const savedConfig = localStorage.getItem('firebaseConfig');
-            const savedGithubConfig = localStorage.getItem('githubConfig');
-            const savedDemoMode = localStorage.getItem('demoMode');
+    // ============================================
+    // VARIÁVEIS GLOBAIS
+    // ============================================
+    let currentUser = null;
+    let allDocuments = [];
+    let allUsers = [];
+    let myChart = null;
 
-            if (savedDemoMode === 'true') {
-                demoMode = true;
-                initDemoMode();
-                return;
-            }
+    // ============================================
+    // INICIALIZAÇÃO
+    // ============================================
+    document.addEventListener('DOMContentLoaded', function() {
+        checkAuth();
+        setupEventListeners();
+    });
 
-            if (savedConfig) {
-                firebaseConfig = JSON.parse(savedConfig);
-                if (savedGithubConfig) {
-                    githubConfig = JSON.parse(savedGithubConfig);
-                }
-                initFirebase();
-            } else {
-                showConfigModal();
-            }
-        }
-
-        // Show config modal
-        function showConfigModal() {
-            document.getElementById('configModal').style.display = 'block';
-        }
-
-        // Demo mode
-        function useDemoMode() {
-            demoMode = true;
-            localStorage.setItem('demoMode', 'true');
-            closeModal('configModal');
-            initDemoMode();
-        }
-
-        function initDemoMode() {
-            console.log('Running in DEMO MODE - Data will not be synced');
-            documents = JSON.parse(localStorage.getItem('demo_documents')) || [];
-            users = JSON.parse(localStorage.getItem('demo_users')) || [];
-            pendingUsers = JSON.parse(localStorage.getItem('demo_pendingUsers')) || [];
-
-            // Create admin user if none exists
-            if (users.length === 0) {
-                users.push({
-                    id: 1,
-                    username: 'admin',
-                    password: 'admin123',
-                    name: 'Administrador',
-                    email: 'admin@cemig.com',
-                    isAdmin: true,
-                    approved: true
-                });
-                saveDemoData();
-            }
-
-            loadSampleData();
-        }
-
-        function saveDemoData() {
-            localStorage.setItem('demo_documents', JSON.stringify(documents));
-            localStorage.setItem('demo_users', JSON.stringify(users));
-            localStorage.setItem('demo_pendingUsers', JSON.stringify(pendingUsers));
-        }
-
-        // Config form submit
-        document.getElementById('configForm').addEventListener('submit', function(e) {
+    function setupEventListeners() {
+        // Login form
+        document.getElementById('loginForm').addEventListener('submit', function(e) {
             e.preventDefault();
-
-            firebaseConfig = {
-                apiKey: document.getElementById('firebaseApiKey').value,
-                projectId: document.getElementById('firebaseProjectId').value,
-                databaseURL: document.getElementById('firebaseDatabaseUrl').value
-            };
-
-            const githubToken = document.getElementById('githubToken').value;
-            const githubRepo = document.getElementById('githubRepo').value;
-
-            if (githubToken && githubRepo) {
-                githubConfig = {
-                    token: githubToken,
-                    repo: githubRepo
-                };
-                localStorage.setItem('githubConfig', JSON.stringify(githubConfig));
-            }
-
-            localStorage.setItem('firebaseConfig', JSON.stringify(firebaseConfig));
-            closeModal('configModal');
-            initFirebase();
+            login();
         });
 
-        // Initialize Firebase
-        async function initFirebase() {
-            try {
-                // Simple Firebase REST API implementation
-                db = {
-                    ref: function(path) {
-                        const fullUrl = `$${firebaseConfig.databaseURL}/$${path}.json`;
-                        return {
-                            get: async function() {
-                                const response = await fetch(fullUrl);
-                                return await response.json();
-                            },
-                            set: async function(data) {
-                                const response = await fetch(fullUrl, {
-                                    method: 'PUT',
-                                    headers: { 'Content-Type': 'application/json' },
-                                    body: JSON.stringify(data)
-                                });
-                                return await response.json();
-                            },
-                            push: async function(data) {
-                                const response = await fetch(fullUrl, {
-                                    method: 'POST',
-                                    headers: { 'Content-Type': 'application/json' },
-                                    body: JSON.stringify(data)
-                                });
-                                return await response.json();
-                            },
-                            remove: async function() {
-                                await fetch(fullUrl, { method: 'DELETE' });
-                            },
-                            on: function(eventType, callback) {
-                                // Poll for changes every 3 seconds
-                                const interval = setInterval(async () => {
-                                    try {
-                                        const data = await this.get();
-                                        callback(data);
-                                    } catch (error) {
-                                        console.error('Error polling data:', error);
-                                    }
-                                }, 3000);
-                                documentListeners.push(interval);
-                            }
-                        };
-                    }
-                };
-
-                // Load initial data
-                await loadFromFirebase();
-                updateSyncStatus('Sincronizado', true);
-
-            } catch (error) {
-                console.error('Error initializing Firebase:', error);
-                alert('Erro ao conectar com Firebase. Verifique suas credenciais.');
-                showConfigModal();
-            }
-        }
-
-        // Load data from Firebase
-        async function loadFromFirebase() {
-            try {
-                updateSyncStatus('Carregando...', false);
-
-                // Load documents
-                const docsData = await db.ref('documents').get();
-                documents = docsData ? Object.keys(docsData).map(key => ({
-                    id: key,
-                    ...docsData[key]
-                })) : [];
-
-                // Load users
-                const usersData = await db.ref('users').get();
-                users = usersData ? Object.keys(usersData).map(key => ({
-                    id: key,
-                    ...usersData[key]
-                })) : [];
-
-                // Create admin if no users
-                if (users.length === 0) {
-                    await createInitialAdmin();
-                }
-
-                // Load pending users
-                const pendingData = await db.ref('pendingUsers').get();
-                pendingUsers = pendingData ? Object.keys(pendingData).map(key => ({
-                    id: key,
-                    ...pendingData[key]
-                })) : [];
-
-                // Start listening for changes
-                startRealtimeSync();
-
-                updateSyncStatus('Sincronizado', true);
-
-            } catch (error) {
-                console.error('Error loading from Firebase:', error);
-                updateSyncStatus('Erro de sincronização', false);
-            }
-        }
-
-        // Create initial admin user
-        async function createInitialAdmin() {
-            const adminUser = {
-                username: 'admin',
-                password: 'admin123',
-                name: 'Administrador',
-                email: 'admin@cemig.com',
-                isAdmin: true,
-                approved: true
-            };
-            
-            const result = await db.ref('users').push(adminUser);
-            users.push({ id: result.name, ...adminUser });
-        }
-
-        // Start realtime sync
-        function startRealtimeSync() {
-            // Listen for document changes
-            db.ref('documents').on('value', (data) => {
-                if (data) {
-                    documents = Object.keys(data).map(key => ({
-                        id: key,
-                        ...data[key]
-                    }));
-                    if (currentUser) {
-                        loadDocuments();
-                        updateDashboard();
-                    }
-                }
-            });
-
-            // Listen for user changes
-            db.ref('users').on('value', (data) => {
-                if (data) {
-                    users = Object.keys(data).map(key => ({
-                        id: key,
-                        ...data[key]
-                    }));
-                    if (currentUser && currentUser.isAdmin) {
-                        loadAdminPanel();
-                    }
-                }
-            });
-
-            // Listen for pending users changes
-            db.ref('pendingUsers').on('value', (data) => {
-                if (data) {
-                    pendingUsers = Object.keys(data).map(key => ({
-                        id: key,
-                        ...data[key]
-                    }));
-                    if (currentUser && currentUser.isAdmin) {
-                        loadAdminPanel();
-                    }
-                }
-            });
-        }
-
-        // Update sync status indicator
-        function updateSyncStatus(text, success) {
-            const indicator = document.querySelector('.sync-indicator');
-            const statusText = document.getElementById('syncStatus');
-            
-            if (statusText) {
-                statusText.textContent = text;
-            }
-            
-            if (indicator) {
-                indicator.style.background = success ? '#28a745' : '#dc3545';
-            }
-        }
-
-        // Save functions for Firebase
-        async function saveDocuments() {
-            try {
-                updateSyncStatus('Salvando...', false);
-
-                if (demoMode) {
-                    saveDemoData();
-                    updateSyncStatus('Salvo (Demo)', true);
-                    return;
-                }
-
-                // Convert array to object for Firebase
-                const docsObj = {};
-                documents.forEach(doc => {
-                    const id = doc.id;
-                    const docData = { ...doc };
-                    delete docData.id;
-                    docsObj[id] = docData;
-                });
-
-                await db.ref('documents').set(docsObj);
-                
-                // Backup to GitHub if configured
-                if (githubConfig) {
-                    await backupToGitHub();
-                }
-
-                updateSyncStatus('Sincronizado', true);
-            } catch (error) {
-                console.error('Error saving documents:', error);
-                updateSyncStatus('Erro ao salvar', false);
-                alert('Erro ao salvar no servidor. Tente novamente.');
-            }
-        }
-
-        async function saveUsers() {
-            try {
-                if (demoMode) {
-                    saveDemoData();
-                    return;
-                }
-
-                const usersObj = {};
-                users.forEach(user => {
-                    const id = user.id;
-                    const userData = { ...user };
-                    delete userData.id;
-                    usersObj[id] = userData;
-                });
-
-                await db.ref('users').set(usersObj);
-            } catch (error) {
-                console.error('Error saving users:', error);
-            }
-        }
-
-        async function savePendingUsers() {
-            try {
-                if (demoMode) {
-                    saveDemoData();
-                    return;
-                }
-
-                const pendingObj = {};
-                pendingUsers.forEach(user => {
-                    const id = user.id;
-                    const userData = { ...user };
-                    delete userData.id;
-                    pendingObj[id] = userData;
-                });
-
-                await db.ref('pendingUsers').set(pendingObj);
-            } catch (error) {
-                console.error('Error saving pending users:', error);
-            }
-        }
-
-        // GitHub Backup
-        async function backupToGitHub() {
-            if (!githubConfig) return;
-
-            try {
-                const [owner, repo] = githubConfig.repo.split('/');
-                const filePath = 'data/backup.json';
-                const url = `https://api.github.com/repos/$${owner}/$${repo}/contents/${filePath}`;
-
-                // Get current file SHA
-                let sha = null;
-                try {
-                    const getResponse = await fetch(url, {
-                        headers: {
-                            'Authorization': `token ${githubConfig.token}`,
-                            'Accept': 'application/vnd.github.v3+json'
-                        }
-                    });
-                    if (getResponse.ok) {
-                        const fileData = await getResponse.json();
-                        sha = fileData.sha;
-                    }
-                } catch (e) {
-                    // File doesn't exist yet
-                }
-
-                // Prepare backup data
-                const backupData = {
-                    documents: documents,
-                    users: users.map(u => ({ ...u, password: '***' })), // Don't backup passwords
-                    lastBackup: new Date().toISOString()
-                };
-
-                const content = btoa(unescape(encodeURIComponent(JSON.stringify(backupData, null, 2))));
-
-                // Upload to GitHub
-                const uploadData = {
-                    message: `Backup automático - ${new Date().toLocaleString('pt-BR')}`,
-                    content: content
-                };
-
-                if (sha) {
-                    uploadData.sha = sha;
-                }
-
-                await fetch(url, {
-                    method: 'PUT',
-                    headers: {
-                        'Authorization': `token ${githubConfig.token}`,
-                        'Accept': 'application/vnd.github.v3+json',
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify(uploadData)
-                });
-
-                console.log('Backup to GitHub successful');
-            } catch (error) {
-                console.error('Error backing up to GitHub:', error);
-            }
-        }
-
-        // =============================================
-        // USER AUTHENTICATION
-        // =============================================
-
-        // Login
-        document.getElementById('loginForm').addEventListener('submit', async function(e) {
+        // Register link
+        document.getElementById('registerLink').addEventListener('click', function(e) {
             e.preventDefault();
+            openRegisterModal();
+        });
+
+        // Search
+        document.getElementById('searchInput').addEventListener('input', function(e) {
+            filterDocuments(e.target.value);
+        });
+
+        // Close modals on outside click
+        window.addEventListener('click', function(e) {
+            if (e.target.classList.contains('modal')) {
+                e.target.style.display = 'none';
+            }
+        });
+    }
+
+    // ============================================
+    // AUTENTICAÇÃO
+    // ============================================
+    function checkAuth() {
+        const user = localStorage.getItem('currentUser');
+        if (user) {
+            currentUser = JSON.parse(user);
+            showMainApp();
+        } else {
+            showLogin();
+        }
+    }
+
+    function showLogin() {
+        document.getElementById('loginPage').classList.remove('hidden');
+        document.getElementById('mainApp').classList.add('hidden');
+    }
+
+    function showMainApp() {
+        document.getElementById('loginPage').classList.add('hidden');
+        document.getElementById('mainApp').classList.remove('hidden');
+        
+        document.getElementById('userName').textContent = currentUser.name;
+        document.getElementById('userRole').textContent = currentUser.isAdmin ? 'Administrador' : 'Usuário';
+        
+        // Show/hide admin button
+        document.getElementById('adminBtn').classList.toggle('hidden', !currentUser.isAdmin);
+        
+        loadData();
+    }
+
+    async function login() {
+        const username = document.getElementById('loginUsername').value;
+        const password = document.getElementById('loginPassword').value;
+
+        try {
+            await loadUsersFromGithub();
             
-            const username = document.getElementById('loginUsername').value;
-            const password = document.getElementById('loginPassword').value;
-
-            document.getElementById('loginLoading').classList.remove('hidden');
-
-            // Simulate network delay
-            await new Promise(resolve => setTimeout(resolve, 500));
-
-            const user = users.find(u => u.username === username && u.password === password && u.approved);
+            const user = allUsers.find(u => 
+                u.username === username && 
+                u.password === password && 
+                u.status === 'active'
+            );
 
             if (user) {
                 currentUser = user;
-                document.getElementById('loginScreen').classList.add('hidden');
-                document.getElementById('mainApp').classList.remove('hidden');
-                document.getElementById('currentUser').textContent = user.name;
-                document.getElementById('userRole').textContent = user.isAdmin ? '👑 Administrador' : '👤 Usuário';
-                
-                if (!user.isAdmin) {
-                    document.getElementById('adminBtn').classList.add('hidden');
+                localStorage.setItem('currentUser', JSON.stringify(user));
+                showMainApp();
+            } else {
+                alert('Usuário ou senha inválidos, ou usuário aguardando aprovação.');
+            }
+        } catch (error) {
+            console.error('Erro no login:', error);
+            alert('Erro ao fazer login. Verifique sua conexão.');
+        }
+    }
+
+    function logout() {
+        localStorage.removeItem('currentUser');
+        currentUser = null;
+        showLogin();
+    }
+
+    // ============================================
+    // GITHUB INTEGRATION
+    // ============================================
+    async function loadUsersFromGithub() {
+        try {
+            const data = await fetchFromGithub('users.json');
+            allUsers = data || initializeDefaultUsers();
+        } catch (error) {
+            console.log('Arquivo de usuários não encontrado, inicializando...');
+            allUsers = initializeDefaultUsers();
+        }
+    }
+
+    async function loadDocumentsFromGithub() {
+        try {
+            const data = await fetchFromGithub('documents.json');
+            allDocuments = data || [];
+        } catch (error) {
+            console.log('Arquivo de documentos não encontrado, inicializando...');
+            allDocuments = [];
+        }
+    }
+
+    async function fetchFromGithub(filename) {
+        const url = `https://api.github.com/repos/${GITHUB_CONFIG.owner}/${GITHUB_CONFIG.repo}/contents/${filename}?ref=${GITHUB_CONFIG.branch}`;
+        
+        const response = await fetch(url, {
+            headers: {
+                'Authorization': `token ${GITHUB_CONFIG.token}`,
+                'Accept': 'application/vnd.github.v3+json'
+            }
+        });
+
+        if (!response.ok) {
+            throw new Error('Arquivo não encontrado');
+        }
+
+        const data = await response.json();
+        const content = atob(data.content);
+        return JSON.parse(content);
+    }
+
+    async function saveToGithub(filename, content, message) {
+        const url = `https://api.github.com/repos/${GITHUB_CONFIG.owner}/${GITHUB_CONFIG.repo}/contents/${filename}`;
+        
+        // Get current file SHA (if exists)
+        let sha = null;
+        try {
+            const response = await fetch(url, {
+                headers: {
+                    'Authorization': `token ${GITHUB_CONFIG.token}`,
+                    'Accept': 'application/vnd.github.v3+json'
                 }
-
-                loadDocuments();
-                updateDashboard();
-            } else {
-                alert('Usuário ou senha inválidos, ou cadastro não aprovado!');
-            }
-
-            document.getElementById('loginLoading').classList.add('hidden');
-        });
-
-        // Logout
-        function logout() {
-            // Stop all listeners
-            documentListeners.forEach(interval => clearInterval(interval));
-            documentListeners = [];
-
-            currentUser = null;
-            document.getElementById('loginScreen').classList.remove('hidden');
-            document.getElementById('mainApp').classList.add('hidden');
-            document.getElementById('loginForm').reset();
-            document.getElementById('adminPanel').classList.add('hidden');
-        }
-
-        // Register
-        function showRegisterModal() {
-            document.getElementById('registerModal').style.display = 'block';
-        }
-
-        document.getElementById('registerForm').addEventListener('submit', async function(e) {
-            e.preventDefault();
-            
-            const username = document.getElementById('regUsername').value;
-
-            // Check if username already exists
-            if (users.find(u => u.username === username) || 
-                pendingUsers.find(u => u.username === username)) {
-                alert('Nome de usuário já existe!');
-                return;
-            }
-
-            const newUser = {
-                id: demoMode ? Date.now().toString() : null,
-                username: username,
-                password: document.getElementById('regPassword').value,
-                name: document.getElementById('regName').value,
-                email: document.getElementById('regEmail').value,
-                isAdmin: false,
-                approved: false
-            };
-
-            if (demoMode) {
-                pendingUsers.push(newUser);
-                saveDemoData();
-            } else {
-                const result = await db.ref('pendingUsers').push(newUser);
-                newUser.id = result.name;
-                pendingUsers.push(newUser);
-            }
-
-            alert('Solicitação enviada! Aguarde aprovação do administrador.');
-            closeModal('registerModal');
-            document.getElementById('registerForm').reset();
-        });
-
-        // =============================================
-        // ADMIN FUNCTIONS
-        // =============================================
-
-        function toggleAdminPanel() {
-            const panel = document.getElementById('adminPanel');
-            if (panel.classList.contains('hidden')) {
-                panel.classList.remove('hidden');
-                loadAdminPanel();
-            } else {
-                panel.classList.add('hidden');
-            }
-        }
-
-        function loadAdminPanel() {
-            // Pending users
-            const pendingList = document.getElementById('pendingUsersList');
-            pendingList.innerHTML = '';
-            
-            if (pendingUsers.length === 0) {
-                pendingList.innerHTML = '<li style="padding: 15px; color: #999;">Nenhuma solicitação pendente</li>';
-            } else {
-                pendingUsers.forEach(user => {
-                    const li = document.createElement('li');
-                    li.className = 'user-item';
-                    li.innerHTML = `
-                        <div>
-                            <strong>$${user.name}</strong> ($${user.username})
-                            <span class="badge badge-pending">PENDENTE</span>
-                            <br><small style="color: #666;">${user.email}</small>
-                        </div>
-                        <div class="actions">
-                            <button class="btn btn-success" onclick="approveUser('${user.id}')">✓ Aprovar</button>
-                            <button class="btn btn-danger" onclick="rejectUser('${user.id}')">✗ Rejeitar</button>
-                        </div>
-                    `;
-                    pendingList.appendChild(li);
-                });
-            }
-
-            // Active users
-            const usersList = document.getElementById('usersList');
-            usersList.innerHTML = '';
-            
-            users.forEach(user => {
-                const li = document.createElement('li');
-                li.className = 'user-item';
-                li.innerHTML = `
-                    <div>
-                        <strong>$${user.name}</strong> ($${user.username})
-                        ${user.isAdmin ? '<span class="badge badge-admin">ADMIN</span>' : ''}
-                        <br><small style="color: #666;">${user.email}</small>
-                    </div>
-                    <div class="actions">
-                        $${!user.isAdmin ? `<button class="btn btn-primary" onclick="makeAdmin('$${user.id}')">Tornar Admin</button>` : ''}
-                        $${user.username !== 'admin' ? `<button class="btn btn-danger" onclick="deleteUser('$${user.id}')">Excluir</button>` : ''}
-                    </div>
-                `;
-                usersList.appendChild(li);
             });
+            if (response.ok) {
+                const data = await response.json();
+                sha = data.sha;
+            }
+        } catch (error) {
+            console.log('Arquivo não existe ainda');
         }
 
-        async function approveUser(id) {
-            const user = pendingUsers.find(u => u.id === id);
-            if (user) {
-                user.approved = true;
-                
-                if (demoMode) {
-                    users.push(user);
-                    pendingUsers = pendingUsers.filter(u => u.id !== id);
-                    saveDemoData();
-                } else {
-                    // Move to users
-                    const userData = { ...user };
-                    delete userData.id;
-                    await db.ref(`users/${id}`).set(userData);
-                    
-                    // Remove from pending
-                    await db.ref(`pendingUsers/${id}`).remove();
-                }
+        const body = {
+            message: message,
+            content: btoa(unescape(encodeURIComponent(JSON.stringify(content, null, 2)))),
+            branch: GITHUB_CONFIG.branch
+        };
 
-                loadAdminPanel();
-                alert('Usuário aprovado com sucesso!');
-            }
+        if (sha) {
+            body.sha = sha;
         }
 
-        async function rejectUser(id) {
-            if (confirm('Deseja realmente rejeitar esta solicitação?')) {
-                if (demoMode) {
-                    pendingUsers = pendingUsers.filter(u => u.id !== id);
-                    saveDemoData();
-                } else {
-                    await db.ref(`pendingUsers/${id}`).remove();
-                }
-                
-                loadAdminPanel();
-                alert('Solicitação rejeitada!');
-            }
-        }
-
-        async function makeAdmin(id) {
-            if (confirm('Deseja tornar este usuário um administrador?')) {
-                const user = users.find(u => u.id === id);
-                if (user) {
-                    user.isAdmin = true;
-                    
-                    if (demoMode) {
-                        saveDemoData();
-                    } else {
-                        await db.ref(`users/${id}/isAdmin`).set(true);
-                    }
-                    
-                    loadAdminPanel();
-                    alert('Usuário promovido a administrador!');
-                }
-            }
-        }
-
-        async function deleteUser(id) {
-            if (confirm('Deseja realmente excluir este usuário?')) {
-                if (demoMode) {
-                    users = users.filter(u => u.id !== id);
-                    saveDemoData();
-                } else {
-                    await db.ref(`users/${id}`).remove();
-                }
-                
-                loadAdminPanel();
-                alert('Usuário excluído com sucesso!');
-            }
-        }
-
-        function showAddUserModal() {
-            document.getElementById('addUserModal').style.display = 'block';
-        }
-
-        document.getElementById('addUserForm').addEventListener('submit', async function(e) {
-            e.preventDefault();
-            
-            const username = document.getElementById('addUserUsername').value;
-
-            // Check if username already exists
-            if (users.find(u => u.username === username)) {
-                alert('Nome de usuário já existe!');
-                return;
-            }
-
-            const newUser = {
-                username: username,
-                password: document.getElementById('addUserPassword').value,
-                name: document.getElementById('addUserName').value,
-                email: document.getElementById('addUserEmail').value,
-                isAdmin: document.getElementById('addUserAdmin').checked,
-                approved: true
-            };
-
-            if (demoMode) {
-                newUser.id = Date.now().toString();
-                users.push(newUser);
-                saveDemoData();
-            } else {
-                const result = await db.ref('users').push(newUser);
-                newUser.id = result.name;
-                users.push(newUser);
-            }
-
-            loadAdminPanel();
-            alert('Usuário adicionado com sucesso!');
-            closeModal('addUserModal');
-            document.getElementById('addUserForm').reset();
+        const response = await fetch(url, {
+            method: 'PUT',
+            headers: {
+                'Authorization': `token ${GITHUB_CONFIG.token}`,
+                'Accept': 'application/vnd.github.v3+json',
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(body)
         });
 
-        // =============================================
-        // DOCUMENT FUNCTIONS
-        // =============================================
-
-        function toggleOtherType() {
-            const docType = document.getElementById('docType').value;
-            const otherGroup = document.getElementById('otherTypeGroup');
-            const otherInput = document.getElementById('docTypeOther');
-            
-            if (docType === 'OUTROS') {
-                otherGroup.classList.remove('hidden');
-                otherInput.required = true;
-            } else {
-                otherGroup.classList.add('hidden');
-                otherInput.required = false;
-                otherInput.value = '';
-            }
+        if (!response.ok) {
+            throw new Error('Erro ao salvar no GitHub');
         }
 
-        function showAddModal() {
-            document.getElementById('modalTitle').textContent = 'Novo Documento';
-            document.getElementById('documentForm').reset();
-            document.getElementById('docId').value = '';
-            document.getElementById('documentModal').style.display = 'block';
-        }
+        return await response.json();
+    }
 
-        function showEditModal(id) {
-            const doc = documents.find(d => d.id === id);
-            if (doc) {
-                document.getElementById('modalTitle').textContent = 'Editar Documento';
-                document.getElementById('docId').value = doc.id;
-                document.getElementById('docName').value = doc.name;
-                document.getElementById('docType').value = doc.type;
-                
-                if (doc.type === 'OUTROS') {
-                    document.getElementById('otherTypeGroup').classList.remove('hidden');
-                    document.getElementById('docTypeOther').value = doc.typeOther || '';
-                    document.getElementById('docTypeOther').required = true;
-                }
-                
-                document.getElementById('docIssueDate').value = doc.issueDate;
-                document.getElementById('docExpiryDate').value = doc.expiryDate;
-                document.getElementById('docLink').value = doc.link || '';
-                document.getElementById('docObservations').value = doc.observations || '';
-                document.getElementById('documentModal').style.display = 'block';
-            }
-        }
+    function initializeDefaultUsers() {
+        return [{
+            id: Date.now().toString(),
+            name: 'Administrador',
+            username: 'admin',
+            email: 'admin@cemig.com',
+            password: 'admin123',
+            isAdmin: true,
+            status: 'active',
+            createdAt: new Date().toISOString()
+        }];
+    }
 
-        document.getElementById('documentForm').addEventListener('submit', async function(e) {
-            e.preventDefault();
-            
-            const id = document.getElementById('docId').value;
-            const docType = document.getElementById('docType').value;
-            
-            const docData = {
-                name: document.getElementById('docName').value,
-                type: docType,
-                typeOther: docType === 'OUTROS' ? document.getElementById('docTypeOther').value : '',
-                issueDate: document.getElementById('docIssueDate').value,
-                expiryDate: document.getElementById('docExpiryDate').value,
-                link: document.getElementById('docLink').value,
-                observations: document.getElementById('docObservations').value,
-                updatedBy: currentUser.name,
-                updatedAt: new Date().toISOString()
-            };
-
-            if (id) {
-                // Edit existing document
-                const index = documents.findIndex(d => d.id === id);
-                if (index !== -1) {
-                    documents[index] = { ...documents[index], ...docData };
-                }
-            } else {
-                // Add new document
-                docData.createdBy = currentUser.name;
-                docData.createdAt = new Date().toISOString();
-                
-                if (demoMode) {
-                    docData.id = Date.now().toString();
-                    documents.push(docData);
-                } else {
-                    const result = await db.ref('documents').push(docData);
-                    docData.id = result.name;
-                    documents.push(docData);
-                }
-            }
-
-            await saveDocuments();
-            loadDocuments();
+    // ============================================
+    // DATA LOADING
+    // ============================================
+    async function loadData() {
+        try {
+            await loadDocumentsFromGithub();
+            await loadUsersFromGithub();
+            renderDocuments();
             updateDashboard();
-            closeModal('documentModal');
-            alert('Documento salvo com sucesso!');
+            renderChart();
+        } catch (error) {
+            console.error('Erro ao carregar dados:', error);
+            alert('Erro ao carregar dados do sistema.');
+        }
+    }
+
+    // ============================================
+    // DASHBOARD
+    // ============================================
+    function updateDashboard() {
+        const today = new Date();
+        today.setHours(0, 0, 0, 0);
+        
+        const ninetyDaysFromNow = new Date(today);
+        ninetyDaysFromNow.setDate(ninetyDaysFromNow.getDate() + 90);
+
+        let valid = 0;
+        let warning = 0;
+        let expired = 0;
+
+        allDocuments.forEach(doc => {
+            const expiryDate = new Date(doc.expiryDate);
+            expiryDate.setHours(0, 0, 0, 0);
+
+            if (expiryDate < today) {
+                expired++;
+            } else if (expiryDate <= ninetyDaysFromNow) {
+                warning++;
+            } else {
+                valid++;
+            }
         });
 
-        async function deleteDocument(id) {
-            if (confirm('Deseja realmente excluir este documento?')) {
-                if (demoMode) {
-                    documents = documents.filter(d => d.id !== id);
-                    saveDemoData();
-                } else {
-                    await db.ref(`documents/${id}`).remove();
-                    documents = documents.filter(d => d.id !== id);
-                }
-                
-                loadDocuments();
-                updateDashboard();
-                alert('Documento excluído com sucesso!');
-            }
+        document.getElementById('validCount').textContent = valid;
+        document.getElementById('warningCount').textContent = warning;
+        document.getElementById('expiredCount').textContent = expired;
+        document.getElementById('totalCount').textContent = allDocuments.length;
+    }
+
+    function getDocumentStatus(expiryDate) {
+        const today = new Date();
+        today.setHours(0, 0, 0, 0);
+        
+        const expiry = new Date(expiryDate);
+        expiry.setHours(0, 0, 0, 0);
+        
+        const ninetyDaysFromNow = new Date(today);
+        ninetyDaysFromNow.setDate(ninetyDaysFromNow.getDate() + 90);
+
+        if (expiry < today) {
+            return { status: 'expired', label: 'Vencido', class: 'status-expired' };
+        } else if (expiry <= ninetyDaysFromNow) {
+            return { status: 'warning', label: 'Próximo ao vencimento', class: 'status-warning' };
+        } else {
+            return { status: 'valid', label: 'Válido', class: 'status-valid' };
         }
+    }
 
-        function showObservations(id) {
-            const doc = documents.find(d => d.id === id);
-            if (doc) {
-                const content = document.getElementById('observationsContent');
-                content.innerHTML = doc.observations || '<em style="color: #999;">Sem observações cadastradas.</em>';
-                document.getElementById('observationsModal').style.display = 'block';
-            }
-        }
+    // ============================================
+    // CHART
+    // ============================================
+    function renderChart() {
+        const ctx = document.getElementById('expirationChart').getContext('2d');
+        
+        const today = new Date();
+        const semesters = [];
+        const data = [];
 
-        function getDocumentStatus(expiryDate) {
-            const today = new Date();
-            const expiry = new Date(expiryDate);
-            const diffTime = expiry - today;
-            const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
-
-            if (diffDays < 0) {
-                return { status: 'expired', label: 'Vencido', class: 'status-expired' };
-            } else if (diffDays <= 90) {
-                return { status: 'warning', label: `${diffDays} dias`, class: 'status-warning' };
-            } else {
-                return { status: 'valid', label: 'Válido', class: 'status-valid' };
-            }
-        }
-
-        function loadDocuments() {
-            const tbody = document.getElementById('documentsBody');
-            tbody.innerHTML = '';
-
-            if (documents.length === 0) {
-                tbody.innerHTML = '<tr><td colspan="8" style="text-align: center; padding: 40px; color: #999;">Nenhum documento cadastrado. Clique em "Novo Documento" para adicionar.</td></tr>';
-                return;
-            }
-
-            documents.forEach(doc => {
-                const status = getDocumentStatus(doc.expiryDate);
-                const displayType = doc.type === 'OUTROS' ? doc.typeOther : doc.type;
-                
-                const tr = document.createElement('tr');
-                tr.innerHTML = `
-                    <td><strong>${doc.name}</strong></td>
-                    <td>${displayType}</td>
-                    <td>${formatDate(doc.issueDate)}</td>
-                    <td>${formatDate(doc.expiryDate)}</td>
-                    <td><span class="status-badge $${status.class}">$${status.label}</span></td>
-                    <td>
-                        $${doc.link ? `<a href="$${doc.link}" target="_blank" style="color: var(--cemig-blue);">🔗 Abrir</a>` : '-'}
-                    </td>
-                    <td style="text-align: center;">
-                        <button class="icon-btn" onclick="showObservations('${doc.id}')" title="Ver observações">
-                            📝
-                        </button>
-                    </td>
-                    <td>
-                        <div class="actions">
-                            <button class="icon-btn" onclick="showEditModal('${doc.id}')" title="Editar">✏️</button>
-                            <button class="icon-btn" onclick="deleteDocument('${doc.id}')" title="Excluir">🗑️</button>
-                        </div>
-                    </td>
-                `;
-                tbody.appendChild(tr);
-            });
-        }
-
-        function updateDashboard() {
-            let validCount = 0;
-            let warningCount = 0;
-            let expiredCount = 0;
-
-            documents.forEach(doc => {
-                const status = getDocumentStatus(doc.expiryDate);
-                if (status.status === 'valid') validCount++;
-                else if (status.status === 'warning') warningCount++;
-                else if (status.status === 'expired') expiredCount++;
-            });
-
-            document.getElementById('validCount').textContent = validCount;
-            document.getElementById('warningCount').textContent = warningCount;
-            document.getElementById('expiredCount').textContent = expiredCount;
-            document.getElementById('totalCount').textContent = documents.length;
-
-            updateChart();
-        }
-
-        function updateChart() {
-            const canvas = document.getElementById('expirationChart');
-            const ctx = canvas.getContext('2d');
+        // Generate next 10 semesters (5 years)
+        for (let i = 0; i < 10; i++) {
+            const semesterStart = new Date(today.getFullYear(), today.getMonth() + (i * 6), 1);
+            const semesterEnd = new Date(today.getFullYear(), today.getMonth() + ((i + 1) * 6), 0);
             
-            const today = new Date();
-            const semesterData = [];
-            const labels = [];
+            const semesterLabel = `${semesterStart.getMonth() < 6 ? 'S1' : 'S2'} ${semesterStart.getFullYear()}`;
+            semesters.push(semesterLabel);
 
-            for (let i = 0; i < 10; i++) {
-                const semesterStart = new Date(today);
-                semesterStart.setMonth(today.getMonth() + (i * 6));
-                
-                const semesterEnd = new Date(semesterStart);
-                semesterEnd.setMonth(semesterStart.getMonth() + 6);
+            const count = allDocuments.filter(doc => {
+                const expiry = new Date(doc.expiryDate);
+                return expiry >= semesterStart && expiry <= semesterEnd;
+            }).length;
 
-                const count = documents.filter(doc => {
-                    const expiry = new Date(doc.expiryDate);
-                    return expiry >= semesterStart && expiry < semesterEnd;
-                }).length;
+            data.push(count);
+        }
 
-                semesterData.push(count);
-                
-                const year = semesterStart.getFullYear();
-                const semester = Math.ceil((semesterStart.getMonth() + 1) / 6);
-                labels.push(`$${semester}º Sem $${year}`);
+        if (myChart) {
+            myChart.destroy();
+        }
+
+        myChart = new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: semesters,
+                datasets: [{
+                    label: 'Documentos a Vencer',
+                    data: data,
+                    backgroundColor: 'rgba(0, 102, 204, 0.7)',
+                    borderColor: 'rgba(0, 102, 204, 1)',
+                    borderWidth: 2
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        display: true,
+                        position: 'top'
+                    }
+                },
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        ticks: {
+                            stepSize: 1
+                        }
+                    }
+                }
             }
+        });
+    }
 
-            ctx.clearRect(0, 0, canvas.width, canvas.height);
-            canvas.width = canvas.offsetWidth;
-            canvas.height = 300;
+    // ============================================
+    // DOCUMENTS
+    // ============================================
+    function renderDocuments(filteredDocs = null) {
+        const docs = filteredDocs || allDocuments;
+        const tbody = document.getElementById('documentsTableBody');
+        tbody.innerHTML = '';
 
-            const maxValue = Math.max(...semesterData, 1);
-            const barWidth = canvas.width / semesterData.length - 20;
-            const chartHeight = canvas.height - 60;
+        if (docs.length === 0) {
+            tbody.innerHTML = '<tr><td colspan="6" style="text-align: center; padding: 40px; color: var(--text-light);">Nenhum documento cadastrado</td></tr>';
+            return;
+        }
 
-            semesterData.forEach((value, index) => {
-                const barHeight = (value / maxValue) * chartHeight;
-                const x = index * (barWidth + 20) + 10;
-                const y = canvas.height - barHeight - 40;
+        docs.forEach(doc => {
+            const statusInfo = getDocumentStatus(doc.expiryDate);
+            const tr = document.createElement('tr');
+            
+            const displayType = doc.type === 'OUTROS' ? doc.typeOther : doc.type;
+            
+            tr.innerHTML = `
+                <td><strong>${doc.name}</strong></td>
+                <td>${displayType}</td>
+                <td>${formatDate(doc.issueDate)}</td>
+                <td>${formatDate(doc.expiryDate)}</td>
+                <td><span class="status-badge ${statusInfo.class}">${statusInfo.label}</span></td>
+                <td>
+                    <div class="action-icons">
+                        ${doc.link ? `<a href="${doc.link}" target="_blank" class="icon-btn view" title="Abrir documento"><i class="fas fa-external-link-alt"></i></a>` : ''}
+                        ${doc.observations ? `<button class="icon-btn info" onclick="showObservations('${doc.id}')" title="Ver observações"><i class="fas fa-info-circle"></i></button>` : ''}
+                        ${currentUser.isAdmin || currentUser.id === doc.createdBy ? `
+                            <button class="icon-btn edit" onclick="editDocument('${doc.id}')" title="Editar"><i class="fas fa-edit"></i></button>
+                            <button class="icon-btn delete" onclick="deleteDocument('${doc.id}')" title="Excluir"><i class="fas fa-trash"></i></button>
+                        ` : ''}
+                    </div>
+                </td>
+            `;
+            
+            tbody.appendChild(tr);
+        });
+    }
 
-                const gradient = ctx.createLinearGradient(0, y, 0, canvas.height - 40);
-                gradient.addColorStop(0, '#0066CC');
-                gradient.addColorStop(1, '#3399FF');
-                
-                ctx.fillStyle = gradient;
-                ctx.fillRect(x, y, barWidth, barHeight);
+    function filterDocuments(searchTerm) {
+        const filtered = allDocuments.filter(doc => {
+            const searchLower = searchTerm.toLowerCase();
+            const displayType = doc.type === 'OUTROS' ? doc.typeOther : doc.type;
+            
+            return doc.name.toLowerCase().includes(searchLower) ||
+                   displayType.toLowerCase().includes(searchLower) ||
+                   (doc.observations && doc.observations.toLowerCase().includes(searchLower));
+        });
+        
+        renderDocuments(filtered);
+    }
 
-                ctx.fillStyle = '#333';
-                ctx.font = 'bold 14px Arial';
-                ctx.textAlign = 'center';
-                ctx.fillText(value, x + barWidth / 2, y - 5);
+    function openAddDocModal() {
+        document.getElementById('modalTitle').textContent = 'Novo Documento';
+        document.getElementById('documentForm').reset();
+        document.getElementById('docId').value = '';
+        document.getElementById('docTypeOtherGroup').classList.add('hidden');
+        document.getElementById('documentModal').style.display = 'block';
+    }
 
-                ctx.fillStyle = '#666';
-                ctx.font = '11px Arial';
-                ctx.save();
-                ctx.translate(x + barWidth / 2, canvas.height -
+    function editDocument(id) {
+        const doc = allDocuments.find(d => d.id === id);
+        if (!doc) return;
+
+        document.getElementById('modalTitle').textContent = 'Editar Documento';
+        document.getElementById('docId').value = doc.id;
+        document.getElementById('docName').value = doc.name;
+        document.getElementById('docType').value = doc.type;
+        document.getElementById('docIssueDate').value = doc.issueDate;
+        document.getElementById('docExpiryDate').value = doc.expiryDate;
+        document.getElementById('docLink').value = doc.link || '';
+        document.getElementById('docObservations').value = doc.observations || '';
+
+        if (doc.type === 'OUTROS') {
+            document.getElementById('docTypeOther').value = doc.typeOther;
+            document.getElementById('docTypeOtherGroup').classList.remove('hidden');
+        }
+
+        document.getElementById('documentModal').style.display = 'block';
+    }
+
+    async function saveDocument() {
+        const id = document.getElementById('docId').value;
+        const name = document.getElementById('docName').value;
+        const type = document.getElementById('docType').value;
+        const typeOther = document.getElementById('docTypeOther').value;
+        const issueDate = document.getElementById('docIssueDate').value;
+        const expiryDate = document.getElementById('docExpiryDate').value;
+        const link = document.getElementById('docLink').value;
+        const observations = document.getElementById('docObservations').value;
+
+        if (!name || !type || !issueDate || !expiryDate) {
+            alert('Por favor, preencha todos os campos obrigatórios.');
+            return;
+        }
+
+        if (type === 'OUTROS' && !typeOther) {
+            alert('Por favor, especifique o tipo do documento.');
+            return;
+        }
+
+        const doc = {
+            id: id || Date.now().toString(),
+            name,
+            type,
+            typeOther: type === 'OUTROS' ? typeOther : '',
+            issueDate,
+            expiryDate,
+            link,
+            observations,
+            createdBy: currentUser.id,
+            createdAt: id ? allDocuments.find(d => d.id === id).createdAt : new Date().toISOString(),
+            updatedAt: new Date().toISOString()
+        };
+
+        if (id) {
+            const index = allDocuments.findIndex(d => d.id === id);
+            allDocuments[index] = doc;
+        } else {
+            allDocuments.push(doc);
+        }
+
+        try {
+            await saveToGithub('documents.json', allDocuments, `${id ? 'Atualizar' : 'Adicionar'} documento: ${name}`);
+            closeDocumentModal();
+            loadData();
+            alert('Documento salvo com sucesso!');
+        } catch (error) {
+            console.error('Erro ao salvar documento:', error);
+            alert('Erro ao salvar documento. Tente novamente.');
+        }
+    }
+
+    async function deleteDocument(id) {
+        if (!confirm('Tem certeza que deseja excluir este documento?')) {
+            return;
+        }
+
+        const doc = allDocuments.find(d => d.id === id);
+        allDocuments = allDocuments.filter(d => d.id !== id);
+
+        try {
+            await saveToGithub('documents.json', allDocuments, `Excluir documento: ${doc.name}`);
+            loadData();
+            alert('Documento excluído com sucesso!');
+        } catch (error) {
+            console.error('Erro ao excluir documento:', error);
+            alert('Erro ao excluir documento. Tente novamente.');
+        }
+    }
+
+    function showObservations(id) {
+        const doc = allDocuments.find(d => d.id === id);
+        if (doc && doc.observations) {
+            document.getElementById('observationsText').textContent = doc.observations;
+            document.getElementById('observationsModal').style.display = 'block';
+        }
+    }
+
+    function handleDocTypeChange() {
+        const type = document.getElementById('docType').value;
+        const otherGroup = document.getElementById('docTypeOtherGroup');
+        
+        if (type === 'OUTROS') {
+            otherGroup.classList.remove('hidden');
+            document.getElementById('docTypeOther').required = true;
+        } else {
+            otherGroup.classList.add('hidden');
+            document.getElementById('docTypeOther').required = false;
+            document.getElementById('docTypeOther').value = '';
+        }
+    }
+
+    function closeDocumentModal() {
+        document.getElementById('documentModal').style.display = 'none';
+    }
+
+    function closeObservationsModal() {
+        document.getElementById('observationsModal').style.display = 'none';
+    }
+
+    // ============================================
+    // USER REGISTRATION
+    // ============================================
+    function openRegisterModal() {
+        document.getElementById('registerModal').style.display = 'block';
+    }
+
+    function closeRegisterModal() {
+        document.getElementById('registerModal').style.display = 'none';
+        document.getElementById('registerForm').reset();
+    }
+
+    async function submitRegistration() {
+        const name = document.getElementById('regName').value;
+        const username = document.getElementById('regUsername').value;
+        const email = document.getElementById('regEmail').value;
+        const password = document.getElementById('regPassword').value;
+        const passwordConfirm = document.getElementById('regPasswordConfirm').value;
+
+        if (!name || !username || !email || !password || !passwordConfirm) {
+            alert('Por favor, preencha todos os campos.');
+            return;
+        }
+
+        if (password !== passwordConfirm) {
+            alert('As senhas não coincidem.');
+            return;
+        }
+
+        if (password.length < 6) {
+            alert('A senha deve ter no mínimo 6 caracteres.');
+            return;
+        }
+
+        await loadUsersFromGithub();
+
+        if (allUsers.find(u => u.username === username)) {
+            alert('Este nome de usuário já está em uso.');
+            return;
+        }
+
+        const newUser = {
+            id: Date.now().toString(),
+            name,
+            username,
+            email,
+            password,
+            isAdmin: false,
+            status: 'pending',
+            createdAt: new Date().toISOString()
+        };
+
+        allUsers.push(newUser);
+
+        try {
+            await saveToGithub('users.json', allUsers, `Nova solicitação de cadastro: ${username}`);
+            closeRegisterModal();
+            alert('Solicitação de cadastro enviada! Aguarde a aprovação do administrador.');
+        } catch (error) {
+            console.error('Erro ao enviar solicitação:', error);
+            alert('Erro ao enviar solicitação. Tente novamente.');
+        }
+    }
+
+    // ============================================
+    // ADMIN
+    // ============================================
+    function openAdminModal() {
+        if (!currentUser.isAdmin) {
+            alert('Acesso negado. Apenas administradores podem acessar esta área.');
+            return;
+        }
+        
+        document.getElementById('adminModal').style.display = 'block';
+        switchAdminTab('users');
+    }
+
+    function closeAdminModal() {
+        document.getElementById('adminModal').style.display = 'none';
+    }
+
+    function switchAdminTab(tab) {
+        // Update tabs
+        document.querySelectorAll('.admin-tab').forEach(t => t.classList.remove('active'));
+        event.target.classList.add('active');
+
+        // Update content
+        document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+        document.getElementById(tab + 'Tab').classList.add('active');
+
+        if (tab === 'users') {
+            renderUsersList();
+        } else if (tab === 'pending') {
+            renderPendingUsersList();
+        }
+    }
+
+    function renderUsersList() {
+        const container = document.getElementById('usersList');
+        const activeUsers = allUsers.filter(u => u.status === 'active');
+
+        if (activeUsers.length === 0) {
+            container.innerHTML = '<p style="text-align: center; color: var(--text-light); padding: 40px;">Nenhum usuário ativo</p>';
+            return;
+        }
+
+        container.innerHTML = activeUsers.map(user => `
+            <div class="user-item">
+                <div class="user-item-info">
+                    <h3>${user.name} ${user.isAdmin ? '<span style="color: var(--cemig-blue);">(Admin)</span>' : ''}</h3>
+                    <p>@${user.username} • ${user.email}</p>
+                    <p style="font-size: 12px; color: var(--text-light);">Senha: ${user.password}</p>
+                </div>
+                <div class="user-item-actions">
+                    ${!user.isAdmin ? `<button class="btn btn-primary" onclick="toggleAdmin('${user.id}', true)">Tornar Admin</button>` : 
+                      allUsers.filter(u => u.isAdmin && u.status === 'active').length > 1 ? 
+                      `<button class="btn btn-secondary" onclick="toggleAdmin('${user.id}', false)">Remover Admin</button>` : ''}
+                    ${user.id !== currentUser.id ? `<button class="btn btn-danger" onclick="deleteUser('${user.id}')">Excluir</button>` : ''}
+                </div>
+            </div>
+        `).join('');
+    }
+
+    function renderPendingUsersList() {
+        const container = document.getElementById('pendingUsersList');
+        const pendingUsers = allUsers.filter(u => u.status === 'pending');
+
+        if (pendingUsers.length === 0) {
+            container.innerHTML = '<p style="text-align: center; color: var(--text-light); padding: 40px;">Nenhuma solicitação pendente</p>';
+            return;
+        }
+
+        container.innerHTML = pendingUsers.map(user => `
+            <div class="user-item">
+                <div class="user-item-info">
+                    <h3>${user.name}</h3>
+                    <p>@${user.username} • ${user.email}</p>
+                    <p style="font-size: 12px; color: var(--text-light);">Solicitado em: ${formatDateTime(user.createdAt)}</p>
+                </div>
+                <div class="user-item-actions">
+                    <button class="btn btn-success" onclick="approveUser('${user.id}')">Aprovar</button>
+                    <button class="btn btn-danger" onclick="rejectUser('${user.id}')">Rejeitar</button>
+                </div>
+            </div>
+        `).join('');
+    }
+
+    async function approveUser(id) {
+        const user = allUsers.find(u => u.id === id);
+        if (!user) return;
+
+        user.status = 'active';
+
+        try {
+            await saveToGithub('users.json', allUsers, `Aprovar usuário: ${user.username}`);
+            alert(`Usuário ${user.username} aprovado com sucesso!`);
+            renderPendingUsersList();
+            renderUsersList();
+        } catch (error) {
+            console.error('Erro ao aprovar usuário:', error);
+            alert('Erro ao aprovar usuário. Tente novamente.');
+        }
+    }
+
+    async function rejectUser(id) {
+        const user = allUsers.find(u => u.id === id);
+        if (!user) return;
+
+        if (!confirm(`Tem certeza que deseja rejeitar a solicitação de ${user.name}?`)) {
+            return;
+        }
+
+        allUsers = allUsers.filter(u => u.id !== id);
+
+        try {
+            await saveToGithub('users.json', allUsers, `Rejeitar usuário: ${user.username}`);
+            alert('Solicitação rejeitada.');
+            renderPendingUsersList();
+        } catch (error) {
+            console.error('Erro ao rejeitar usuário:', error);
+            alert('Erro ao rejeitar usuário. Tente novamente.');
+        }
+    }
+
+    async function toggleAdmin(id, makeAdmin) {
+        const user = allUsers.find(u => u.id === id);
+        if (!user) return;
+
+        user.isAdmin = makeAdmin;
+
+        try {
+            await saveToGithub('users.json', allUsers, `${makeAdmin ? 'Conceder' : 'Remover'} privilégios de admin: ${user.username}`);
+            alert(`Privilégios de ${user.username} atualizados!`);
+            renderUsersList();
+        } catch (error) {
+            console.error('Erro ao atualizar privilégios:', error);
+            alert('Erro ao atualizar privilégios. Tente novamente.');
+        }
+    }
+
+    async function deleteUser(id) {
+        const user = allUsers.find(u => u.id === id);
+        if (!user) return;
+
+        if (!confirm(`Tem certeza que deseja excluir o usuário ${user.name}?`)) {
+            return;
+        }
+
+        allUsers = allUsers.filter(u => u.id !== id);
+
+        try {
+            await saveToGithub('users.json', allUsers, `Excluir usuário: ${user.username}`);
+            alert('Usuário excluído com sucesso!');
+            renderUsersList();
+        } catch (error) {
+            console.error('Erro ao excluir usuário:', error);
+            alert('Erro ao excluir usuário. Tente novamente.');
+        }
+    }
+
+    function openAddUserModal() {
+        document.getElementById('addUserModal').style.display = 'block';
+}function closeAddUserModal() {
+        document.getElementById('addUserModal').style.display = 'none';
+        document.getElementById('addUserForm').reset();
+    }
+
+    async function saveNewUser() {
+        const name = document.getElementById('newUserName').value;
+        const username = document.getElementById('newUsername').value;
+        const email = document.getElementById('newUserEmail').value;
+        const password = document.getElementById('newUserPassword').value;
+        const isAdmin = document.getElementById('newUserAdmin').checked;
+
+        if (!name || !username || !email || !password) {
+            alert('Por favor, preencha todos os campos.');
+            return;
+        }
+
+        if (password.length < 6) {
+            alert('A senha deve ter no mínimo 6 caracteres.');
+            return;
+        }
+
+        await loadUsersFromGithub();
+
+        if (allUsers.find(u => u.username === username)) {
+            alert('Este nome de usuário já está em uso.');
+            return;
+        }
+
+        const newUser = {
+            id: Date.now().toString(),
+            name,
+            username,
+            email,
+            password,
+            isAdmin,
+            status: 'active',
+            createdAt: new Date().toISOString()
+        };
+
+        allUsers.push(newUser);
+
+        try {
+            await saveToGithub('users.json', allUsers, `Adicionar novo usuário: ${username}`);
+            closeAddUserModal();
+            renderUsersList();
+            alert('Usuário adicionado com sucesso!');
+        } catch (error) {
+            console.error('Erro ao adicionar usuário:', error);
+            alert('Erro ao adicionar usuário. Tente novamente.');
+        }
+    }
+
+    async function changePassword() {
+        const newPassword = document.getElementById('changePassword').value;
+        const confirmPassword = document.getElementById('changePasswordConfirm').value;
+
+        if (!newPassword || !confirmPassword) {
+            alert('Por favor, preencha todos os campos.');
+            return;
+        }
+
+        if (newPassword !== confirmPassword) {
+            alert('As senhas não coincidem.');
+            return;
+        }
+
+        if (newPassword.length < 6) {
+            alert('A senha deve ter no mínimo 6 caracteres.');
+            return;
+        }
+
+        const user = allUsers.find(u => u.id === currentUser.id);
+        if (user) {
+            user.password = newPassword;
+
+            try {
+                await saveToGithub('users.json', allUsers, `Atualizar senha: ${user.username}`);
+                currentUser.password = newPassword;
+                localStorage.setItem('currentUser', JSON.stringify(currentUser));
+                document.getElementById('settingsForm').reset();
+                alert('Senha alterada com sucesso!');
+            } catch (error) {
+                console.error('Erro ao alterar senha:', error);
+                alert('Erro ao alterar senha. Tente novamente.');
+            }
+        }
+    }
+
+    // ============================================
+    // UTILITY FUNCTIONS
+    // ============================================
+    function formatDate(dateString) {
+        const date = new Date(dateString);
+        return date.toLocaleDateString('pt-BR');
+    }
+
+    function formatDateTime(dateString) {
+        const date = new Date(dateString);
+        return date.toLocaleString('pt-BR');
+    }
+</script>
